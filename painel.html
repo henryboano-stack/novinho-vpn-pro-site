@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07111f">
-
   <title>Painel do Cliente | NOVINHO VPN PRO</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -19,7 +19,7 @@
     body {
       min-height: 100vh;
       background: #07111f;
-      color: #ffffff;
+      color: #fff;
       font-family: Arial, sans-serif;
       padding: 20px;
     }
@@ -27,19 +27,18 @@
     .container {
       width: 100%;
       max-width: 500px;
-      margin: 45px auto;
+      margin: 35px auto;
     }
 
     .logo {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .logo h1 {
       color: #19d3a2;
       font-size: 27px;
       font-weight: 900;
-      letter-spacing: 1px;
     }
 
     .logo p {
@@ -53,11 +52,11 @@
       background: #101e30;
       border: 1px solid #24364c;
       border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+      padding: 22px;
+      margin-bottom: 18px;
     }
 
-    .card h2 {
+    h2 {
       font-size: 21px;
       margin-bottom: 8px;
     }
@@ -65,15 +64,16 @@
     .subtitle {
       color: #9caec2;
       font-size: 13px;
-      margin-bottom: 25px;
+      margin-bottom: 22px;
+      line-height: 1.5;
     }
 
     .info {
       background: #0a1727;
       border: 1px solid #24364c;
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 13px;
+      padding: 14px;
+      margin-bottom: 12px;
     }
 
     .info small {
@@ -84,13 +84,12 @@
     }
 
     .info strong {
-      color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       overflow-wrap: anywhere;
     }
 
-    .status {
-      color: #19d3a2 !important;
+    .status-active {
+      color: #19d3a2;
     }
 
     .loading {
@@ -107,13 +106,11 @@
       border-top-color: #19d3a2;
       border-radius: 50%;
       margin: 0 auto 18px;
-      animation: girar 1s linear infinite;
+      animation: spin 1s linear infinite;
     }
 
-    @keyframes girar {
-      to {
-        transform: rotate(360deg);
-      }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .error {
@@ -127,21 +124,77 @@
       line-height: 1.6;
     }
 
+    .vpn-status {
+      background: #0a1727;
+      border: 1px solid #24364c;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .vpn-circle {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 15px;
+      border-radius: 50%;
+      background: #26394e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+    }
+
+    .vpn-circle.connected {
+      background: #103c35;
+      border: 2px solid #19d3a2;
+    }
+
+    .vpn-status h3 {
+      font-size: 18px;
+      margin-bottom: 7px;
+    }
+
+    .vpn-status p {
+      color: #9caec2;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .simulation-note {
+      color: #f4c66a !important;
+      margin-top: 10px;
+    }
+
     .btn {
       width: 100%;
       padding: 15px;
       border: none;
       border-radius: 10px;
-      background: #19d3a2;
-      color: #06131d;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-connect {
+      background: #19d3a2;
+      color: #06131d;
+    }
+
+    .btn-disconnect {
+      background: #e34b60;
+      color: white;
+    }
+
+    .btn-logout {
+      background: #26394e;
+      color: white;
       margin-top: 20px;
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
     }
 
@@ -149,7 +202,7 @@
       text-align: center;
       color: #71859b;
       font-size: 11px;
-      margin-top: 25px;
+      margin-top: 22px;
     }
 
     #dashboard {
@@ -160,288 +213,317 @@
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="logo">
-      <h1>NOVINHO VPN PRO</h1>
-      <p>ÁREA PRIVADA DO CLIENTE</p>
+  <div class="logo">
+    <h1>NOVINHO VPN PRO</h1>
+    <p>ÁREA PRIVADA DO CLIENTE</p>
+  </div>
+
+  <div class="card">
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      A verificar a tua conta...
     </div>
 
-    <div class="card">
+    <div id="error" class="error"></div>
 
-      <div id="loading" class="loading">
-        <div class="spinner"></div>
-        A verificar a tua conta...
+    <div id="dashboard">
+
+      <h2>Bem-vindo!</h2>
+
+      <p class="subtitle">
+        A tua conta foi identificada com sucesso.
+      </p>
+
+      <div class="info">
+        <small>Nome de utilizador</small>
+        <strong id="username">---</strong>
       </div>
 
-      <div id="error" class="error"></div>
-
-      <div id="dashboard">
-
-        <h2>Bem-vindo!</h2>
-
-        <p class="subtitle">
-          A tua conta foi identificada com sucesso.
-        </p>
-
-        <div class="info">
-          <small>Nome de utilizador</small>
-          <strong id="username">---</strong>
-        </div>
-
-        <div class="info">
-          <small>Estado da conta</small>
-          <strong id="status" class="status">---</strong>
-        </div>
-
-        <div class="info">
-          <small>Validade da conta</small>
-          <strong id="expires">---</strong>
-        </div>
-
-        <button class="btn" id="logoutBtn" onclick="logout()">
-          TERMINAR SESSÃO
-        </button>
-
+      <div class="info">
+        <small>Estado da conta</small>
+        <strong id="accountStatus" class="status-active">---</strong>
       </div>
 
+      <div class="info">
+        <small>Validade da conta</small>
+        <strong id="expires">---</strong>
+      </div>
+
+      <button class="btn btn-logout" onclick="logout()" id="logoutBtn">
+        TERMINAR SESSÃO
+      </button>
+
+    </div>
+  </div>
+
+  <div class="card" id="vpnCard" style="display:none">
+
+    <h2>Minha VPN</h2>
+
+    <p class="subtitle">
+      Controla o estado da tua ligação.
+    </p>
+
+    <div class="vpn-status">
+
+      <div class="vpn-circle" id="vpnCircle">🔒</div>
+
+      <h3 id="vpnTitle">DESLIGADA</h3>
+
+      <p id="vpnDescription">
+        A VPN está desligada.
+      </p>
+
+      <p class="simulation-note">
+        MODO DE SIMULAÇÃO — sem ligação VPN real.
+      </p>
+
     </div>
 
-    <div class="footer">
-      © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
-    </div>
+    <button
+      class="btn btn-connect"
+      id="connectBtn"
+      onclick="connectVPN()">
+      CONECTAR VPN
+    </button>
+
+    <button
+      class="btn btn-disconnect"
+      id="disconnectBtn"
+      onclick="disconnectVPN()"
+      style="display:none">
+      DESCONECTAR VPN
+    </button>
 
   </div>
 
-  <script>
-    // CONFIGURAÇÃO DO SUPABASE
+  <div class="footer">
+    © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
+  </div>
 
-    const SUPABASE_URL =
-      "https://yaawdvqonfxnyiedcddq.supabase.co";
+</div>
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+<script>
+  // CONFIGURAÇÃO SUPABASE
 
+  const SUPABASE_URL =
+    "https://yaawdvqonfxnyiedcddq.supabase.co";
 
-    // CRIAR CLIENTE SUPABASE
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("error");
+  const dashboard = document.getElementById("dashboard");
+  const vpnCard = document.getElementById("vpnCard");
 
-    // ELEMENTOS DA PÁGINA
+  function showError(message) {
+    loading.style.display = "none";
+    dashboard.style.display = "none";
+    vpnCard.style.display = "none";
+    errorBox.style.display = "block";
+    errorBox.textContent = message;
+  }
 
-    const loading = document.getElementById("loading");
-    const errorBox = document.getElementById("error");
-    const dashboard = document.getElementById("dashboard");
-
-
-    // MOSTRAR ERRO
-
-    function showError(message) {
-      loading.style.display = "none";
-      dashboard.style.display = "none";
-      errorBox.style.display = "block";
-      errorBox.textContent = message;
+  function formatDate(value) {
+    if (!value) {
+      return "Não definida pelo administrador";
     }
 
+    const date = new Date(value);
 
-    // FORMATAR DATA
+    if (isNaN(date.getTime())) {
+      return "Data indisponível";
+    }
 
-    function formatDate(dateValue) {
-      if (!dateValue) {
-        return "Sem data definida";
-      }
+    return date.toLocaleDateString("pt-AO", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  }
 
-      const date = new Date(dateValue);
+  async function loadDashboard() {
+    const accessToken =
+      sessionStorage.getItem("access_token");
 
-      if (isNaN(date.getTime())) {
-        return "Data indisponível";
-      }
+    const refreshToken =
+      sessionStorage.getItem("refresh_token");
 
-      return date.toLocaleDateString("pt-AO", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
+    if (!accessToken || !refreshToken) {
+      window.location.replace("cliente.html");
+      return;
+    }
+
+    const { data: sessionData, error: sessionError } =
+      await supabaseClient.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken
       });
-    }
 
-
-    // CARREGAR DADOS DO CLIENTE
-
-    async function loadDashboard() {
-
-      const accessToken =
-        sessionStorage.getItem("access_token");
-
-      const refreshToken =
-        sessionStorage.getItem("refresh_token");
-
-
-      // VERIFICAR SE EXISTE SESSÃO
-
-      if (!accessToken || !refreshToken) {
-        window.location.replace("cliente.html");
-        return;
-      }
-
-
-      // RESTAURAR SESSÃO
-
-      const { data: sessionData, error: sessionError } =
-        await supabaseClient.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken
-        });
-
-      if (sessionError || !sessionData.session) {
-        sessionStorage.removeItem("access_token");
-        sessionStorage.removeItem("refresh_token");
-
-        window.location.replace("cliente.html");
-        return;
-      }
-
-
-      // ACTUALIZAR TOKENS
-
-      sessionStorage.setItem(
-        "access_token",
-        sessionData.session.access_token
-      );
-
-      sessionStorage.setItem(
-        "refresh_token",
-        sessionData.session.refresh_token
-      );
-
-
-      // IDENTIFICAR UTILIZADOR
-
-      const { data: userData, error: userError } =
-        await supabaseClient.auth.getUser();
-
-      if (userError || !userData.user) {
-        sessionStorage.removeItem("access_token");
-        sessionStorage.removeItem("refresh_token");
-
-        window.location.replace("cliente.html");
-        return;
-      }
-
-
-      // BUSCAR PERFIL NA BASE DE DADOS
-
-      const { data: profile, error: profileError } =
-        await supabaseClient
-          .from("user_profiles")
-          .select("username, role, status, expires_at")
-          .eq("id", userData.user.id)
-          .single();
-
-
-      if (profileError || !profile) {
-        throw new Error(
-          "Não foi possível carregar os dados da tua conta. Verifica a ligação ou as permissões do servidor."
-        );
-      }
-
-
-      // VERIFICAR TIPO DE CONTA
-
-      if (profile.role !== "client") {
-        throw new Error(
-          "Esta conta não tem autorização para entrar nesta área."
-        );
-      }
-
-
-      // VERIFICAR ESTADO DA CONTA
-
-      if (profile.status !== "active") {
-        throw new Error(
-          "A tua conta encontra-se bloqueada ou inactiva. Contacta o administrador."
-        );
-      }
-
-
-      // VERIFICAR VALIDADE
-
-      if (
-        profile.expires_at &&
-        new Date(profile.expires_at).getTime() <= Date.now()
-      ) {
-        throw new Error(
-          "A validade da tua conta terminou. Contacta o administrador para renovar."
-        );
-      }
-
-
-      // MOSTRAR INFORMAÇÕES
-
-      document.getElementById("username").textContent =
-        profile.username;
-
-      document.getElementById("status").textContent =
-        "ACTIVA";
-
-      document.getElementById("expires").textContent =
-        formatDate(profile.expires_at);
-
-
-      // MOSTRAR PAINEL
-
-      loading.style.display = "none";
-      errorBox.style.display = "none";
-      dashboard.style.display = "block";
-    }
-
-
-    // TEMPO MÁXIMO DE ESPERA: 15 SEGUNDOS
-
-    const timeout = new Promise((_, reject) => {
-      setTimeout(() => {
-        reject(new Error(
-          "O servidor está a demorar a responder. Verifica a internet e tenta novamente."
-        ));
-      }, 15000);
-    });
-
-
-    // INICIAR VERIFICAÇÃO
-
-    Promise.race([
-      loadDashboard(),
-      timeout
-    ]).catch(error => {
-      showError(error.message || "Ocorreu um erro ao carregar a tua conta.");
-    });
-
-
-    // TERMINAR SESSÃO
-
-    async function logout() {
-
-      const button = document.getElementById("logoutBtn");
-
-      button.disabled = true;
-      button.textContent = "A terminar sessão...";
-
-      try {
-        await supabaseClient.auth.signOut();
-      } catch (error) {
-        console.error(error);
-      }
-
+    if (sessionError || !sessionData.session) {
       sessionStorage.removeItem("access_token");
       sessionStorage.removeItem("refresh_token");
-
       window.location.replace("cliente.html");
+      return;
     }
 
-  </script>
+    sessionStorage.setItem(
+      "access_token",
+      sessionData.session.access_token
+    );
+
+    sessionStorage.setItem(
+      "refresh_token",
+      sessionData.session.refresh_token
+    );
+
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+      sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("refresh_token");
+      window.location.replace("cliente.html");
+      return;
+    }
+
+    const { data: profile, error: profileError } =
+      await supabaseClient
+        .from("user_profiles")
+        .select("username, role, status, expires_at")
+        .eq("id", userData.user.id)
+        .single();
+
+    if (profileError || !profile) {
+      throw new Error(
+        "Não foi possível carregar os dados da tua conta."
+      );
+    }
+
+    if (profile.role !== "client") {
+      throw new Error(
+        "Esta conta não tem autorização para entrar nesta área."
+      );
+    }
+
+    if (profile.status !== "active") {
+      throw new Error(
+        "A tua conta encontra-se bloqueada ou inactiva."
+      );
+    }
+
+    if (
+      profile.expires_at &&
+      new Date(profile.expires_at).getTime() <= Date.now()
+    ) {
+      throw new Error(
+        "A validade da tua conta terminou. Contacta o administrador."
+      );
+    }
+
+    document.getElementById("username").textContent =
+      profile.username;
+
+    document.getElementById("accountStatus").textContent =
+      "ACTIVA";
+
+    document.getElementById("expires").textContent =
+      formatDate(profile.expires_at);
+
+    loading.style.display = "none";
+    errorBox.style.display = "none";
+    dashboard.style.display = "block";
+    vpnCard.style.display = "block";
+  }
+
+  // SIMULAÇÃO DE LIGAÇÃO VPN
+
+  function connectVPN() {
+    const circle = document.getElementById("vpnCircle");
+
+    circle.classList.add("connected");
+    circle.textContent = "🟢";
+
+    document.getElementById("vpnTitle").textContent =
+      "CONECTADA (SIMULAÇÃO)";
+
+    document.getElementById("vpnDescription").textContent =
+      "A simulação da ligação foi iniciada com sucesso.";
+
+    document.getElementById("connectBtn").style.display =
+      "none";
+
+    document.getElementById("disconnectBtn").style.display =
+      "block";
+  }
+
+  function disconnectVPN() {
+    const circle = document.getElementById("vpnCircle");
+
+    circle.classList.remove("connected");
+    circle.textContent = "🔒";
+
+    document.getElementById("vpnTitle").textContent =
+      "DESLIGADA";
+
+    document.getElementById("vpnDescription").textContent =
+      "A VPN está desligada.";
+
+    document.getElementById("connectBtn").style.display =
+      "block";
+
+    document.getElementById("disconnectBtn").style.display =
+      "none";
+  }
+
+  // TEMPO MÁXIMO DE ESPERA
+
+  const timeout = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error(
+        "O servidor está a demorar a responder. Verifica a internet e tenta novamente."
+      ));
+    }, 15000);
+  });
+
+  Promise.race([
+    loadDashboard(),
+    timeout
+  ]).catch(error => {
+    showError(
+      error.message || "Ocorreu um erro ao carregar a tua conta."
+    );
+  });
+
+  // TERMINAR SESSÃO
+
+  async function logout() {
+    const button = document.getElementById("logoutBtn");
+
+    button.disabled = true;
+    button.textContent = "A terminar sessão...";
+
+    try {
+      await supabaseClient.auth.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+
+    sessionStorage.removeItem("access_token");
+    sessionStorage.removeItem("refresh_token");
+
+    window.location.replace("cliente.html");
+  }
+</script>
 
 </body>
-            </html>
+</html>
