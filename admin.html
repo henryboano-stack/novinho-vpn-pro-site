@@ -4,14 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#07111f">
 <title>Administração | NOVINHO VPN PRO</title>
-
+<meta name="theme-color" content="#07111f">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
-body{background:#07111f;color:white;font-family:Arial,sans-serif;padding:18px;margin:0}
+body{margin:0;padding:18px;background:#07111f;color:white;font-family:Arial,sans-serif}
 .container{max-width:460px;margin:35px auto}
 .header{text-align:center;margin-bottom:25px}
 .header h1{color:#19d3a2;font-size:26px}
@@ -20,262 +19,177 @@ body{background:#07111f;color:white;font-family:Arial,sans-serif;padding:18px;ma
 h2{color:#19d3a2;font-size:20px}
 .subtitle{color:#9caec2;font-size:13px;line-height:1.5}
 input{width:100%;padding:14px;margin-top:12px;border-radius:8px;border:1px solid #344761;background:#091525;color:white;font-size:15px}
-button{width:100%;padding:14px;margin-top:14px;border-radius:8px;border:none;background:#19d3a2;color:#06131d;font-size:14px;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
+button{width:100%;padding:14px;margin-top:14px;border:0;border-radius:8px;background:#19d3a2;color:#06131d;font-size:14px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
 .logout{background:#d94b60;color:white}
 .hidden{display:none}
-#result{margin-top:18px;padding:12px;border-radius:8px;background:#091525;color:#c5d3e1;font-size:13px;line-height:1.6;overflow-wrap:anywhere;display:none}
+#result{display:block;margin-top:18px;padding:12px;border-radius:8px;background:#091525;color:#c5d3e1;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
 .footer{text-align:center;color:#71859b;font-size:11px;margin-top:25px}
 </style>
 </head>
 
 <body>
 <div class="container">
-
   <div class="header">
     <h1>NOVINHO VPN PRO</h1>
     <p>PAINEL ADMINISTRATIVO</p>
   </div>
 
   <div class="card">
-
-    <div id="loginArea">
-      <h2>Entrar como administrador</h2>
-      <p class="subtitle">Introduz as tuas credenciais administrativas.</p>
-
-      <input id="email" type="email" placeholder="Email administrativo" autocomplete="username">
-      <input id="password" type="password" placeholder="Senha administrativa" autocomplete="current-password">
-
-      <button id="loginBtn">ENTRAR</button>
-    </div>
+    <form id="loginForm">
+      <div id="loginArea">
+        <h2>Entrar como administrador</h2>
+        <p class="subtitle">Introduz as tuas credenciais administrativas.</p>
+        <input id="email" type="email" placeholder="Email administrativo" required>
+        <input id="password" type="password" placeholder="Senha administrativa" required>
+        <button id="loginBtn" type="submit">ENTRAR</button>
+      </div>
+    </form>
 
     <div id="clientArea" class="hidden">
       <h2>Criar novo cliente</h2>
-      <p class="subtitle">Regista uma nova conta para aceder ao NOVINHO VPN PRO.</p>
-
-      <input id="username" type="text" placeholder="Nome do utilizador" autocomplete="off">
-      <input id="clientPassword" type="password" placeholder="Senha do cliente" autocomplete="new-password">
-
-      <button id="createBtn">CRIAR CLIENTE</button>
-      <button id="logoutBtn" class="logout">TERMINAR SESSÃO</button>
+      <p class="subtitle">Regista uma nova conta.</p>
+      <input id="username" type="text" placeholder="Nome do utilizador">
+      <input id="clientPassword" type="password" placeholder="Senha do cliente">
+      <button id="createBtn" type="button">CRIAR CLIENTE</button>
+      <button id="logoutBtn" class="logout" type="button">TERMINAR SESSÃO</button>
     </div>
 
-    <div id="result"></div>
+    <div id="result">A preparar o sistema...</div>
   </div>
 
-  <div class="footer">
-    © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
-  </div>
+  <div class="footer">© 2026 NOVINHO VPN PRO. Todos os direitos reservados.</div>
 </div>
 
 <script>
-const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
+const URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
+const KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
-const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
-
+const result = document.getElementById("result");
 const loginArea = document.getElementById("loginArea");
 const clientArea = document.getElementById("clientArea");
-const result = document.getElementById("result");
+const loginBtn = document.getElementById("loginBtn");
 
-function showMessage(message, success = false) {
-  result.style.display = "block";
+function message(text, success=false) {
+  result.textContent = text;
   result.style.color = success ? "#19d3a2" : "#ffb6c4";
-  result.textContent = message;
 }
 
-function withTimeout(promise, seconds, stage) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => {
-      setTimeout(() => {
-        reject(new Error(
-          "Tempo de espera excedido durante: " + stage +
-          ". Verifica a internet e tenta novamente."
-        ));
-      }, seconds * 1000);
-    })
-  ]);
-}
+let db = null;
 
-if (!window.supabase) {
-  showMessage("Não foi possível carregar o sistema Supabase. Verifica a internet e tenta novamente.");
-  throw new Error("Biblioteca Supabase não carregada.");
-}
-
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: false
-    }
+try {
+  if (!window.supabase || !window.supabase.createClient) {
+    throw new Error("A biblioteca Supabase não carregou. Verifica a internet.");
   }
-);
 
-function showAdmin(username) {
-  loginArea.classList.add("hidden");
-  clientArea.classList.remove("hidden");
-  showMessage("Administrador autenticado: " + username, true);
+  db = window.supabase.createClient(URL, KEY);
+  message("Sistema preparado. Podes entrar.", true);
+} catch (e) {
+  message("Erro de inicialização: " + e.message);
 }
 
-// ENTRAR COMO ADMINISTRADOR
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
 
-document.getElementById("loginBtn").onclick = async () => {
-  const button = document.getElementById("loginBtn");
+  if (!db) {
+    message("O sistema Supabase não está disponível. Recarrega a página.");
+    return;
+  }
+
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
   if (!email || !password) {
-    showMessage("Preenche o email e a senha.");
+    message("Preenche o email e a senha.");
     return;
   }
 
-  button.disabled = true;
-  button.textContent = "A AUTENTICAR...";
-  showMessage("A contactar o Supabase...");
-
-  let loginConcluido = false;
+  loginBtn.disabled = true;
+  loginBtn.textContent = "A AUTENTICAR...";
+  message("A contactar o Supabase...");
 
   try {
-    const loginResult = await withTimeout(
-      supabase.auth.signInWithPassword({ email, password }),
-      15,
-      "autenticação"
-    );
+    const login = await db.auth.signInWithPassword({email, password});
 
-    if (loginResult.error) {
-      throw new Error("Falha no login: " + loginResult.error.message);
-    }
+    if (login.error) throw login.error;
 
-    if (!loginResult.data.user) {
-      throw new Error("O Supabase não devolveu os dados do utilizador.");
-    }
+    const profileResult = await db
+      .from("user_profiles")
+      .select("username, role, status")
+      .eq("id", login.data.user.id)
+      .single();
 
-    loginConcluido = true;
-    button.textContent = "A VERIFICAR PERMISSÕES...";
-    showMessage("Login efectuado. A verificar as permissões de administrador...");
-
-    const profileResult = await withTimeout(
-      supabase
-        .from("user_profiles")
-        .select("username, role, status")
-        .eq("id", loginResult.data.user.id)
-        .single(),
-      15,
-      "consulta do perfil administrativo"
-    );
-
-    if (profileResult.error) {
-      throw new Error(
-        "O login foi aceite, mas não foi possível consultar o perfil: " +
-        profileResult.error.message
-      );
-    }
+    if (profileResult.error) throw profileResult.error;
 
     const profile = profileResult.data;
 
-    if (!profile) {
-      throw new Error("Perfil administrativo não encontrado.");
-    }
-
-    if (profile.role !== "admin" || profile.status !== "active") {
+    if (!profile || profile.role !== "admin" || profile.status !== "active") {
+      await db.auth.signOut();
       throw new Error("A conta não tem permissões administrativas activas.");
     }
 
-    showAdmin(profile.username || email);
+    loginArea.classList.add("hidden");
+    clientArea.classList.remove("hidden");
+    message("Bem-vindo, administrador " + profile.username + ".", true);
 
-  } catch (error) {
-    if (loginConcluido) {
-      await supabase.auth.signOut();
-    }
-
-    showMessage("ERRO: " + (error.message || "Falha desconhecida."));
+  } catch (e) {
+    message("Não foi possível entrar: " + (e.message || "Erro desconhecido."));
   } finally {
-    button.disabled = false;
-    button.textContent = "ENTRAR";
+    loginBtn.disabled = false;
+    loginBtn.textContent = "ENTRAR";
   }
-};
+});
 
-// CRIAR CLIENTE
-
-document.getElementById("createBtn").onclick = async () => {
-  const button = document.getElementById("createBtn");
-
-  const username = document.getElementById("username")
-    .value.trim().toLowerCase();
-
+document.getElementById("createBtn").addEventListener("click", async function() {
+  const button = this;
+  const username = document.getElementById("username").value.trim().toLowerCase();
   const password = document.getElementById("clientPassword").value;
 
   if (!/^[a-z0-9_]{3,30}$/.test(username)) {
-    showMessage("O utilizador deve ter entre 3 e 30 caracteres. Usa apenas letras, números e _.");
+    message("O nome deve ter 3 a 30 caracteres: letras, números ou _.");
     return;
   }
 
   if (password.length < 8 || password.length > 72) {
-    showMessage("A senha deve ter entre 8 e 72 caracteres.");
+    message("A senha deve ter entre 8 e 72 caracteres.");
     return;
   }
 
   button.disabled = true;
-  button.textContent = "A CRIAR CLIENTE...";
+  button.textContent = "A CRIAR...";
 
   try {
-    const sessionResult = await withTimeout(
-      supabase.auth.getSession(),
-      15,
-      "verificação da sessão"
-    );
+    const session = await db.auth.getSession();
 
-    if (sessionResult.error || !sessionResult.data.session) {
-      throw new Error("A sessão administrativa terminou. Entra novamente.");
+    if (session.error || !session.data.session) {
+      throw new Error("Sessão terminada. Entra novamente.");
     }
 
-    const functionResult = await withTimeout(
-      supabase.functions.invoke("quick-processor", {
-        body: {
-          username: username,
-          password: password
-        }
-      }),
-      25,
-      "criação do cliente"
-    );
+    const response = await db.functions.invoke("quick-processor", {
+      body: {username, password}
+    });
 
-    if (functionResult.error) {
-      throw new Error(functionResult.error.message);
+    if (response.error) throw response.error;
+    if (!response.data || !response.data.success) {
+      throw new Error(response.data?.error || "Não foi possível criar o cliente.");
     }
 
-    const data = functionResult.data;
-
-    if (!data || !data.success) {
-      throw new Error(data?.error || "Não foi possível criar o cliente.");
-    }
-
-    showMessage(
-      "CLIENTE CRIADO COM SUCESSO! Utilizador: " + data.username,
-      true
-    );
-
+    message("Cliente criado com sucesso: " + response.data.username, true);
     document.getElementById("username").value = "";
     document.getElementById("clientPassword").value = "";
 
-  } catch (error) {
-    showMessage("ERRO AO CRIAR CLIENTE: " + error.message);
+  } catch (e) {
+    message("Erro ao criar cliente: " + e.message);
   } finally {
     button.disabled = false;
     button.textContent = "CRIAR CLIENTE";
   }
-};
+});
 
-// TERMINAR SESSÃO
-
-document.getElementById("logoutBtn").onclick = async () => {
-  await supabase.auth.signOut();
+document.getElementById("logoutBtn").addEventListener("click", async function() {
+  if (db) await db.auth.signOut();
   location.reload();
-};
+});
 </script>
 </body>
 </html>
