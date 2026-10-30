@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071426">
+  <title>Área do Cliente | NOVINHO VPN PRO</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #071426;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: #102239;
+      border: 1px solid #213b55;
+      border-radius: 18px;
+      padding: 30px 24px;
+      box-shadow: 0 15px 40px #0005;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 23px;
+      font-weight: 900;
+      color: #19e68c;
+      margin-bottom: 8px;
+    }
+
+    .logo span {
+      color: white;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #9eb0c2;
+      font-size: 13px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .description {
+      text-align: center;
+      color: #9eb0c2;
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid #304963;
+      border-radius: 9px;
+      background: #071426;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #19e68c;
+    }
+
+    .password-area {
+      position: relative;
+    }
+
+    .password-area input {
+      padding-right: 65px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 12px;
+      top: 13px;
+      color: #19e68c;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 9px;
+      background: #19e68c;
+      color: #071426;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .login-button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .message {
+      display: none;
+      padding: 12px;
+      margin-top: 18px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .error {
+      display: block;
+      background: #481e28;
+      color: #ffb5bd;
+    }
+
+    .success {
+      display: block;
+      background: #123e31;
+      color: #8df5c1;
+    }
+
+    .support {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #294158;
+      font-size: 12px;
+      color: #9eb0c2;
+    }
+
+    .support strong {
+      display: block;
+      color: white;
+      margin: 7px 0;
+    }
+
+    .support a {
+      color: #19e68c;
+      text-decoration: none;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #19e68c;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <div class="logo">
+      NOVINHO <span>VPN PRO</span>
+    </div>
+
+    <p class="subtitle">TECNOLOGIA • CONECTIVIDADE • SEGURANÇA</p>
+
+    <h2>Área do Cliente</h2>
+
+    <p class="description">
+      Introduz os teus dados para aceder à tua conta.
+    </p>
+
+    <form id="loginForm">
+
+      <label for="username">Nome de utilizador</label>
+
+      <input
+        type="text"
+        id="username"
+        placeholder="Exemplo: cliente002"
+        autocomplete="username"
+        required
+      >
+
+      <label for="password">Palavra-passe</label>
+
+      <div class="password-area">
+        <input
+          type="password"
+          id="password"
+          placeholder="Introduz a tua palavra-passe"
+          autocomplete="current-password"
+          required
+        >
+
+        <button
+          type="button"
+          class="show-password"
+          id="togglePassword"
+        >
+          Mostrar
+        </button>
+      </div>
+
+      <button
+        type="submit"
+        class="login-button"
+        id="loginButton"
+      >
+        ENTRAR NA MINHA CONTA
+      </button>
+
+      <div id="message" class="message"></div>
+
+    </form>
+
+    <div class="support">
+      Precisas de ajuda? Contacta o administrador.
+
+      <strong>ADM HENRY BOANO</strong>
+
+      <a href="https://wa.me/244938260411">
+        WhatsApp: +244 938 260 411
+      </a>
+    </div>
+
+    <a class="back" href="./index.html">
+      ← Voltar ao site principal
+    </a>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // CONFIGURAÇÃO DO SUPABASE
+
+    const SUPABASE_URL =
+      "https://yaawdvqonfxnyiedcddq.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "COLOCA_AQUI_A_TUA_CHAVE_SB_PUBLISHABLE";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      }
+    );
+
+    const form = document.getElementById("loginForm");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const loginButton = document.getElementById("loginButton");
+    const message = document.getElementById("message");
+    const togglePassword = document.getElementById("togglePassword");
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    togglePassword.addEventListener("click", function () {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePassword.textContent = "Ocultar";
+      } else {
+        passwordInput.type = "password";
+        togglePassword.textContent = "Mostrar";
+      }
+    });
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const username = usernameInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      if (
+        SUPABASE_PUBLISHABLE_KEY.includes("COLOCA_AQUI")
+      ) {
+        showMessage(
+          "Falta configurar a chave pública do Supabase.",
+          "error"
+        );
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = "A VERIFICAR...";
+      message.className = "message";
+
+      try {
+        const { data, error } =
+          await supabaseClient.functions.invoke(
+            "login-cliente",
+            {
+              body: {
+                username: username,
+                password: password
+              }
+            }
+          );
+
+        if (error) {
+          throw new Error(
+            "Não foi possível contactar o servidor. Verifica a ligação e tenta novamente."
+          );
+        }
+
+        if (!data || !data.success) {
+          throw new Error(
+            data?.error || "Não foi possível iniciar sessão."
+          );
+        }
+
+        if (!data.access_token || !data.refresh_token) {
+          throw new Error(
+            "O servidor não devolveu os dados necessários para iniciar sessão."
+          );
+        }
+
+        sessionStorage.setItem(
+          "access_token",
+          data.access_token
+        );
+
+        sessionStorage.setItem(
+          "refresh_token",
+          data.refresh_token
+        );
+
+        sessionStorage.setItem(
+          "username",
+          data.username
+        );
+
+        showMessage(
+          "LOGIN REALIZADO COM SUCESSO! A entrar...",
+          "success"
+        );
+
+        loginButton.textContent = "LOGIN CONFIRMADO";
+
+        setTimeout(function () {
+          window.location.href = "./painel.html";
+        }, 1000);
+
+      } catch (error) {
+        showMessage(
+          error.message || "Ocorreu um erro. Tenta novamente.",
+          "error"
+        );
+
+        loginButton.disabled = false;
+        loginButton.textContent = "ENTRAR NA MINHA CONTA";
+      }
+    });
+  </script>
+
+</body>
+  </html>
+  
