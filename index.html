@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt"><link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#07111f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NOVINHO VPN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +11,19 @@
   <title>NOVINHO VPN PRO | Internet sem limites</title>
   <meta name="description" content="NOVINHO VPN PRO - Serviço de VPN com acesso seguro, planos e suporte ao cliente.">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
+    *{margin:0;padding:0;box-sizing:border-box}<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("./sw.js")
+      .then(function() {
+        console.log("NOVINHO VPN PRO preparado!");
+      })
+      .catch(function(error) {
+        console.error("Erro ao preparar aplicação:", error);
+      });
+  });
+}
+</script>
     body{font-family:Arial,sans-serif;background:#071426;color:#fff;line-height:1.6}
     header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1b3048}
     .logo{font-size:21px;font-weight:900;color:#19e68c}
