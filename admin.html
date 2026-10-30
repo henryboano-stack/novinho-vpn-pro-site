@@ -4,9 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Administração | NOVINHO VPN PRO</title>
 <meta name="theme-color" content="#07111f">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Administração | NOVINHO VPN PRO</title>
 
 <style>
 *{box-sizing:border-box}
@@ -30,71 +29,117 @@ button:disabled{opacity:.5}
 
 <body>
 <div class="container">
+
   <div class="header">
     <h1>NOVINHO VPN PRO</h1>
     <p>PAINEL ADMINISTRATIVO</p>
   </div>
 
   <div class="card">
+
     <form id="loginForm">
       <div id="loginArea">
         <h2>Entrar como administrador</h2>
         <p class="subtitle">Introduz as tuas credenciais administrativas.</p>
-        <input id="email" type="email" placeholder="Email administrativo" required>
-        <input id="password" type="password" placeholder="Senha administrativa" required>
+
+        <input id="email" type="email" placeholder="Email administrativo" autocomplete="username" required>
+
+        <input id="password" type="password" placeholder="Senha administrativa" autocomplete="current-password" required>
+
         <button id="loginBtn" type="submit">ENTRAR</button>
       </div>
     </form>
 
     <div id="clientArea" class="hidden">
       <h2>Criar novo cliente</h2>
-      <p class="subtitle">Regista uma nova conta.</p>
-      <input id="username" type="text" placeholder="Nome do utilizador">
-      <input id="clientPassword" type="password" placeholder="Senha do cliente">
+      <p class="subtitle">Regista uma nova conta para aceder ao NOVINHO VPN PRO.</p>
+
+      <input id="username" type="text" placeholder="Nome do utilizador" autocomplete="off">
+
+      <input id="clientPassword" type="password" placeholder="Senha do cliente" autocomplete="new-password">
+
       <button id="createBtn" type="button">CRIAR CLIENTE</button>
       <button id="logoutBtn" class="logout" type="button">TERMINAR SESSÃO</button>
     </div>
 
-    <div id="result">A preparar o sistema...</div>
+    <div id="result">A preparar o painel...</div>
+
   </div>
 
-  <div class="footer">© 2026 NOVINHO VPN PRO. Todos os direitos reservados.</div>
+  <div class="footer">
+    © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
+  </div>
+
 </div>
 
 <script>
-const URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
-const KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+"use strict";
+
+// CONFIGURAÇÃO SUPABASE
+
+const SUPABASE_URL =
+"https://yaawdvqonfxnyiedcddq.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+
+let accessToken = null;
+let adminEmail = null;
+
+// ELEMENTOS
 
 const result = document.getElementById("result");
 const loginArea = document.getElementById("loginArea");
 const clientArea = document.getElementById("clientArea");
 const loginBtn = document.getElementById("loginBtn");
 
-function message(text, success=false) {
+function message(text, success = false) {
   result.textContent = text;
   result.style.color = success ? "#19d3a2" : "#ffb6c4";
 }
 
-let db = null;
-
-try {
-  if (!window.supabase || !window.supabase.createClient) {
-    throw new Error("A biblioteca Supabase não carregou. Verifica a internet.");
-  }
-
-  db = window.supabase.createClient(URL, KEY);
-  message("Sistema preparado. Podes entrar.", true);
-} catch (e) {
-  message("Erro de inicialização: " + e.message);
+function timeoutSignal(seconds) {
+  return AbortSignal.timeout(seconds * 1000);
 }
 
-document.getElementById("loginForm").addEventListener("submit", async function(event) {
-  event.preventDefault();
+async function readResponse(response) {
+  const text = await response.text();
 
-  if (!db) {
-    message("O sistema Supabase não está disponível. Recarrega a página.");
-    return;
+  let data = {};
+
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error("O servidor devolveu uma resposta inválida.");
   }
+
+  if (!response.ok) {
+    throw new Error(
+      data.msg ||
+      data.message ||
+      data.error_description ||
+      data.error ||
+      data.details ||
+      ("Erro HTTP " + response.status)
+    );
+  }
+
+  return data;
+}
+
+// TESTAR CONFIGURAÇÃO
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  message("Erro: configuração do Supabase incompleta.");
+} else {
+  message("Painel preparado. Podes introduzir os teus dados.", true);
+}
+
+// ENTRADA DO ADMINISTRADOR
+
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+
+  event.preventDefault();
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
@@ -109,44 +154,121 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   message("A contactar o Supabase...");
 
   try {
-    const login = await db.auth.signInWithPassword({email, password});
 
-    if (login.error) throw login.error;
+    // 1. AUTENTICAR
 
-    const profileResult = await db
-      .from("user_profiles")
-      .select("username, role, status")
-      .eq("id", login.data.user.id)
-      .single();
+    const authResponse = await fetch(
+      SUPABASE_URL + "/auth/v1/token?grant_type=password",
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        }),
+        signal: timeoutSignal(20)
+      }
+    );
 
-    if (profileResult.error) throw profileResult.error;
+    const authData = await readResponse(authResponse);
 
-    const profile = profileResult.data;
-
-    if (!profile || profile.role !== "admin" || profile.status !== "active") {
-      await db.auth.signOut();
-      throw new Error("A conta não tem permissões administrativas activas.");
+    if (!authData.access_token || !authData.user) {
+      throw new Error("O Supabase não devolveu uma sessão válida.");
     }
+
+    accessToken = authData.access_token;
+    adminEmail = email;
+
+    // 2. VERIFICAR PERFIL ADMINISTRATIVO
+
+    message("Login aceite. A verificar permissões...");
+
+    const profileResponse = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/user_profiles?select=username,role,status&id=eq." +
+      encodeURIComponent(authData.user.id),
+      {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + accessToken
+        },
+        signal: timeoutSignal(20)
+      }
+    );
+
+    const profiles = await readResponse(profileResponse);
+
+    if (!Array.isArray(profiles) || profiles.length !== 1) {
+      throw new Error("Perfil administrativo não encontrado ou não acessível.");
+    }
+
+    const profile = profiles[0];
+
+    if (profile.role !== "admin") {
+      throw new Error("Esta conta não tem permissões de administrador.");
+    }
+
+    if (profile.status !== "active") {
+      throw new Error("A conta administrativa não está activa.");
+    }
+
+    // 3. ABRIR PAINEL
 
     loginArea.classList.add("hidden");
     clientArea.classList.remove("hidden");
-    message("Bem-vindo, administrador " + profile.username + ".", true);
 
-  } catch (e) {
-    message("Não foi possível entrar: " + (e.message || "Erro desconhecido."));
+    document.getElementById("password").value = "";
+
+    message(
+      "Bem-vindo, administrador " +
+      (profile.username || adminEmail) + "!",
+      true
+    );
+
+  } catch (error) {
+
+    accessToken = null;
+    adminEmail = null;
+
+    let errorMessage = error.message || "Erro desconhecido.";
+
+    if (error.name === "TimeoutError" || error.name === "AbortError") {
+      errorMessage = "O Supabase demorou a responder. Verifica a internet e tenta novamente.";
+    }
+
+    message("ERRO NO LOGIN: " + errorMessage);
+
   } finally {
+
     loginBtn.disabled = false;
     loginBtn.textContent = "ENTRAR";
+
   }
+
 });
 
+// CRIAR CLIENTE
+
 document.getElementById("createBtn").addEventListener("click", async function() {
+
   const button = this;
-  const username = document.getElementById("username").value.trim().toLowerCase();
+
+  const username = document.getElementById("username")
+    .value.trim().toLowerCase();
+
   const password = document.getElementById("clientPassword").value;
 
+  if (!accessToken) {
+    message("Sessão administrativa não encontrada. Entra novamente.");
+    return;
+  }
+
   if (!/^[a-z0-9_]{3,30}$/.test(username)) {
-    message("O nome deve ter 3 a 30 caracteres: letras, números ou _.");
+    message("O utilizador deve ter entre 3 e 30 caracteres. Usa letras, números e _.");
     return;
   }
 
@@ -156,40 +278,65 @@ document.getElementById("createBtn").addEventListener("click", async function() 
   }
 
   button.disabled = true;
-  button.textContent = "A CRIAR...";
+  button.textContent = "A CRIAR CLIENTE...";
 
   try {
-    const session = await db.auth.getSession();
 
-    if (session.error || !session.data.session) {
-      throw new Error("Sessão terminada. Entra novamente.");
+    const response = await fetch(
+      SUPABASE_URL + "/functions/v1/quick-processor",
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        }),
+        signal: timeoutSignal(30)
+      }
+    );
+
+    const data = await readResponse(response);
+
+    if (!data.success) {
+      throw new Error(data.error || "Não foi possível criar o cliente.");
     }
 
-    const response = await db.functions.invoke("quick-processor", {
-      body: {username, password}
-    });
+    message(
+      "CLIENTE CRIADO COM SUCESSO! Utilizador: " + data.username,
+      true
+    );
 
-    if (response.error) throw response.error;
-    if (!response.data || !response.data.success) {
-      throw new Error(response.data?.error || "Não foi possível criar o cliente.");
-    }
-
-    message("Cliente criado com sucesso: " + response.data.username, true);
     document.getElementById("username").value = "";
     document.getElementById("clientPassword").value = "";
 
-  } catch (e) {
-    message("Erro ao criar cliente: " + e.message);
+  } catch (error) {
+
+    message("ERRO AO CRIAR CLIENTE: " + error.message);
+
   } finally {
+
     button.disabled = false;
     button.textContent = "CRIAR CLIENTE";
+
   }
+
 });
 
-document.getElementById("logoutBtn").addEventListener("click", async function() {
-  if (db) await db.auth.signOut();
+// TERMINAR SESSÃO
+
+document.getElementById("logoutBtn").addEventListener("click", function() {
+
+  accessToken = null;
+  adminEmail = null;
+
   location.reload();
+
 });
+
 </script>
 </body>
 </html>
