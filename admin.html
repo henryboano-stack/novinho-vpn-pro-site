@@ -3,340 +3,419 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#07111f">
 <title>Administração | NOVINHO VPN PRO</title>
 
 <style>
 *{box-sizing:border-box}
 body{margin:0;padding:18px;background:#07111f;color:white;font-family:Arial,sans-serif}
-.container{max-width:460px;margin:35px auto}
+.container{max-width:850px;margin:25px auto}
 .header{text-align:center;margin-bottom:25px}
-.header h1{color:#19d3a2;font-size:26px}
+.header h1{color:#19d3a2}
 .header p{color:#91a4b9;font-size:12px;letter-spacing:2px}
-.card{background:#101e30;border:1px solid #26394e;padding:22px;border-radius:15px}
-h2{color:#19d3a2;font-size:20px}
+.card{background:#101e30;border:1px solid #26394e;padding:20px;border-radius:14px;margin-bottom:18px}
+h2{color:#19d3a2;font-size:19px}
 .subtitle{color:#9caec2;font-size:13px;line-height:1.5}
-input{width:100%;padding:14px;margin-top:12px;border-radius:8px;border:1px solid #344761;background:#091525;color:white;font-size:15px}
-button{width:100%;padding:14px;margin-top:14px;border:0;border-radius:8px;background:#19d3a2;color:#06131d;font-size:14px;font-weight:bold;cursor:pointer}
+input,select{width:100%;padding:13px;margin-top:10px;border-radius:8px;border:1px solid #344761;background:#091525;color:white;font-size:15px}
+button{padding:12px;border:0;border-radius:8px;background:#19d3a2;color:#06131d;font-weight:bold;cursor:pointer;margin-top:10px}
 button:disabled{opacity:.5}
+.full{width:100%}
 .logout{background:#d94b60;color:white}
-.hidden{display:none}
-#result{display:block;margin-top:18px;padding:12px;border-radius:8px;background:#091525;color:#c5d3e1;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.danger{background:#d94b60;color:white}
+.secondary{background:#304761;color:white}
+.hidden{display:none!important}
+#result{margin-top:15px;padding:12px;border-radius:8px;background:#091525;color:#c5d3e1;font-size:13px;overflow-wrap:anywhere}
+.client{background:#091525;border:1px solid #26394e;border-radius:10px;padding:15px;margin-top:12px}
+.client strong{color:#19d3a2;font-size:16px}
+.client p{font-size:13px;color:#bdcbd9;margin:7px 0}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}
+.actions button{margin:0;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#091525;padding:13px;border-radius:9px;text-align:center}
+.stat strong{display:block;color:#19d3a2;font-size:23px}
+.stat span{font-size:11px;color:#9caec2}
 .footer{text-align:center;color:#71859b;font-size:11px;margin-top:25px}
+@media(max-width:500px){.actions{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-  <div class="header">
-    <h1>NOVINHO VPN PRO</h1>
-    <p>PAINEL ADMINISTRATIVO</p>
-  </div>
+<div class="header">
+<h1>NOVINHO VPN PRO</h1>
+<p>PAINEL ADMINISTRATIVO</p>
+</div>
 
-  <div class="card">
+<!-- LOGIN -->
+<div class="card" id="loginArea">
+<h2>Entrar como administrador</h2>
+<p class="subtitle">Introduz as tuas credenciais administrativas.</p>
 
-    <form id="loginForm">
-      <div id="loginArea">
-        <h2>Entrar como administrador</h2>
-        <p class="subtitle">Introduz as tuas credenciais administrativas.</p>
+<form id="loginForm">
+<input id="email" type="email" placeholder="Email administrativo" required>
+<input id="password" type="password" placeholder="Senha administrativa" required>
+<button class="full" id="loginBtn">ENTRAR</button>
+</form>
+</div>
 
-        <input id="email" type="email" placeholder="Email administrativo" autocomplete="username" required>
+<!-- PAINEL -->
+<div id="dashboard" class="hidden">
 
-        <input id="password" type="password" placeholder="Senha administrativa" autocomplete="current-password" required>
+<div class="stats">
+<div class="stat"><strong id="total">0</strong><span>TOTAL DE CLIENTES</span></div>
+<div class="stat"><strong id="active">0</strong><span>ACTIVOS</span></div>
+<div class="stat"><strong id="expired">0</strong><span>EXPIRADOS</span></div>
+</div>
 
-        <button id="loginBtn" type="submit">ENTRAR</button>
-      </div>
-    </form>
+<div class="card">
+<h2>Criar novo cliente</h2>
+<p class="subtitle">Define o utilizador, a palavra-passe e a duração da conta.</p>
 
-    <div id="clientArea" class="hidden">
-      <h2>Criar novo cliente</h2>
-      <p class="subtitle">Regista uma nova conta para aceder ao NOVINHO VPN PRO.</p>
+<input id="username" placeholder="Exemplo: cliente002">
+<input id="clientPassword" type="password" placeholder="Palavra-passe (mínimo 8 caracteres)">
 
-      <input id="username" type="text" placeholder="Nome do utilizador" autocomplete="off">
+<select id="days">
+<option value="7">7 dias</option>
+<option value="15">15 dias</option>
+<option value="30" selected>30 dias</option>
+<option value="90">90 dias</option>
+<option value="120">120 dias</option>
+</select>
 
-      <input id="clientPassword" type="password" placeholder="Senha do cliente" autocomplete="new-password">
+<button class="full" id="createBtn">CRIAR CLIENTE</button>
+</div>
 
-      <button id="createBtn" type="button">CRIAR CLIENTE</button>
-      <button id="logoutBtn" class="logout" type="button">TERMINAR SESSÃO</button>
-    </div>
+<div class="card">
+<h2>Gestão de clientes</h2>
+<p class="subtitle">Consulta, renova, bloqueia, desbloqueia ou elimina contas.</p>
 
-    <div id="result">A preparar o painel...</div>
+<input id="search" placeholder="Pesquisar cliente..." oninput="filterClients()">
 
-  </div>
+<button class="full secondary" id="refreshBtn">ACTUALIZAR LISTA</button>
 
-  <div class="footer">
-    © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
-  </div>
+<div id="clientList">
+<p class="subtitle">A carregar clientes...</p>
+</div>
+</div>
 
+<button class="full logout" id="logoutBtn">TERMINAR SESSÃO</button>
+</div>
+
+<div id="result">Painel preparado.</div>
+
+<div class="footer">
+© 2026 NOVINHO VPN PRO. Todos os direitos reservados.
+</div>
 </div>
 
 <script>
 "use strict";
 
-// CONFIGURAÇÃO SUPABASE
-
-const SUPABASE_URL =
-"https://yaawdvqonfxnyiedcddq.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
 let accessToken = null;
-let adminEmail = null;
+let clients = [];
 
-// ELEMENTOS
+const $ = id => document.getElementById(id);
 
-const result = document.getElementById("result");
-const loginArea = document.getElementById("loginArea");
-const clientArea = document.getElementById("clientArea");
-const loginBtn = document.getElementById("loginBtn");
-
-function message(text, success = false) {
-  result.textContent = text;
-  result.style.color = success ? "#19d3a2" : "#ffb6c4";
+function message(text, success=false) {
+  $("result").textContent = text;
+  $("result").style.color = success ? "#19d3a2" : "#ffb6c4";
 }
 
-function timeoutSignal(seconds) {
-  return AbortSignal.timeout(seconds * 1000);
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#039;"
+  })[char]);
 }
 
 async function readResponse(response) {
   const text = await response.text();
-
   let data = {};
-
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch {
-    throw new Error("O servidor devolveu uma resposta inválida.");
-  }
+  try { data = text ? JSON.parse(text) : {}; }
+  catch { throw new Error("Resposta inválida do servidor."); }
 
   if (!response.ok) {
-    throw new Error(
-      data.msg ||
-      data.message ||
-      data.error_description ||
-      data.error ||
-      data.details ||
-      ("Erro HTTP " + response.status)
-    );
+    throw new Error(data.error || data.message || "Erro HTTP " + response.status);
   }
-
   return data;
 }
 
-// TESTAR CONFIGURAÇÃO
-
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  message("Erro: configuração do Supabase incompleta.");
-} else {
-  message("Painel preparado. Podes introduzir os teus dados.", true);
-}
-
-// ENTRADA DO ADMINISTRADOR
-
-document.getElementById("loginForm").addEventListener("submit", async function(event) {
-
+// LOGIN ADMINISTRATIVO
+$("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  const email = $("email").value.trim();
+  const password = $("password").value;
 
-  if (!email || !password) {
-    message("Preenche o email e a senha.");
-    return;
-  }
-
-  loginBtn.disabled = true;
-  loginBtn.textContent = "A AUTENTICAR...";
-  message("A contactar o Supabase...");
+  $("loginBtn").disabled = true;
+  message("A verificar credenciais...");
 
   try {
-
-    // 1. AUTENTICAR
-
-    const authResponse = await fetch(
+    const response = await fetch(
       SUPABASE_URL + "/auth/v1/token?grant_type=password",
       {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Content-Type": "application/json"
+        method:"POST",
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Content-Type":"application/json"
         },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        }),
-        signal: timeoutSignal(20)
-      }
-    );
-
-    const authData = await readResponse(authResponse);
-
-    if (!authData.access_token || !authData.user) {
-      throw new Error("O Supabase não devolveu uma sessão válida.");
-    }
-
-    accessToken = authData.access_token;
-    adminEmail = email;
-
-    // 2. VERIFICAR PERFIL ADMINISTRATIVO
-
-    message("Login aceite. A verificar permissões...");
-
-    const profileResponse = await fetch(
-      SUPABASE_URL +
-      "/rest/v1/user_profiles?select=username,role,status&id=eq." +
-      encodeURIComponent(authData.user.id),
-      {
-        method: "GET",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + accessToken
-        },
-        signal: timeoutSignal(20)
-      }
-    );
-
-    const profiles = await readResponse(profileResponse);
-
-    if (!Array.isArray(profiles) || profiles.length !== 1) {
-      throw new Error("Perfil administrativo não encontrado ou não acessível.");
-    }
-
-    const profile = profiles[0];
-
-    if (profile.role !== "admin") {
-      throw new Error("Esta conta não tem permissões de administrador.");
-    }
-
-    if (profile.status !== "active") {
-      throw new Error("A conta administrativa não está activa.");
-    }
-
-    // 3. ABRIR PAINEL
-
-    loginArea.classList.add("hidden");
-    clientArea.classList.remove("hidden");
-
-    document.getElementById("password").value = "";
-
-    message(
-      "Bem-vindo, administrador " +
-      (profile.username || adminEmail) + "!",
-      true
-    );
-
-  } catch (error) {
-
-    accessToken = null;
-    adminEmail = null;
-
-    let errorMessage = error.message || "Erro desconhecido.";
-
-    if (error.name === "TimeoutError" || error.name === "AbortError") {
-      errorMessage = "O Supabase demorou a responder. Verifica a internet e tenta novamente.";
-    }
-
-    message("ERRO NO LOGIN: " + errorMessage);
-
-  } finally {
-
-    loginBtn.disabled = false;
-    loginBtn.textContent = "ENTRAR";
-
-  }
-
-});
-
-// CRIAR CLIENTE
-
-document.getElementById("createBtn").addEventListener("click", async function() {
-
-  const button = this;
-
-  const username = document.getElementById("username")
-    .value.trim().toLowerCase();
-
-  const password = document.getElementById("clientPassword").value;
-
-  if (!accessToken) {
-    message("Sessão administrativa não encontrada. Entra novamente.");
-    return;
-  }
-
-  if (!/^[a-z0-9_]{3,30}$/.test(username)) {
-    message("O utilizador deve ter entre 3 e 30 caracteres. Usa letras, números e _.");
-    return;
-  }
-
-  if (password.length < 8 || password.length > 72) {
-    message("A senha deve ter entre 8 e 72 caracteres.");
-    return;
-  }
-
-  button.disabled = true;
-  button.textContent = "A CRIAR CLIENTE...";
-
-  try {
-
-    const response = await fetch(
-      SUPABASE_URL + "/functions/v1/quick-processor",
-      {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + accessToken,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password
-        }),
-        signal: timeoutSignal(30)
+        body:JSON.stringify({email,password})
       }
     );
 
     const data = await readResponse(response);
 
-    if (!data.success) {
-      throw new Error(data.error || "Não foi possível criar o cliente.");
+    if (!data.access_token || !data.user) {
+      throw new Error("Sessão não recebida.");
     }
 
-    message(
-      "CLIENTE CRIADO COM SUCESSO! Utilizador: " + data.username,
-      true
+    accessToken = data.access_token;
+
+    const profileResponse = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/user_profiles?select=username,role,status&id=eq." +
+      encodeURIComponent(data.user.id),
+      {
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + accessToken
+        }
+      }
     );
 
-    document.getElementById("username").value = "";
-    document.getElementById("clientPassword").value = "";
+    const profiles = await readResponse(profileResponse);
+    const profile = profiles[0];
 
-  } catch (error) {
+    if (!profile || profile.role !== "admin" || profile.status !== "active") {
+      throw new Error("Acesso exclusivo ao administrador.");
+    }
 
-    message("ERRO AO CRIAR CLIENTE: " + error.message);
+    $("loginArea").classList.add("hidden");
+    $("dashboard").classList.remove("hidden");
+    $("password").value = "";
 
+    message("Bem-vindo, administrador " + profile.username + "!", true);
+
+    await loadClients();
+
+  } catch(error) {
+    accessToken = null;
+    message("ERRO NO LOGIN: " + error.message);
   } finally {
+    $("loginBtn").disabled = false;
+  }
+});
 
-    button.disabled = false;
-    button.textContent = "CRIAR CLIENTE";
+// COMUNICAÇÃO COM A NOVA EDGE FUNCTION
+async function management(action, extra={}) {
+  if (!accessToken) throw new Error("Sessão administrativa terminada.");
 
+  const response = await fetch(
+    SUPABASE_URL + "/functions/v1/gestao-clientes",
+    {
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer " + accessToken,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({action,...extra})
+    }
+  );
+
+  return await readResponse(response);
+}
+
+// CRIAR CLIENTE
+$("createBtn").addEventListener("click", async () => {
+  const username = $("username").value.trim().toLowerCase();
+  const password = $("clientPassword").value;
+  const days = Number($("days").value);
+
+  if (!/^[a-z0-9_-]{3,32}$/.test(username)) {
+    message("Nome inválido. Usa letras, números, _ ou -.");
+    return;
   }
 
+  if (password.length < 8 || password.length > 72) {
+    message("A palavra-passe deve ter entre 8 e 72 caracteres.");
+    return;
+  }
+
+  const button = $("createBtn");
+  button.disabled = true;
+  button.textContent = "A CRIAR...";
+
+  try {
+    const data = await management("create",{username,password,days});
+
+    message("CLIENTE CRIADO! Utilizador: " + data.username, true);
+
+    $("username").value = "";
+    $("clientPassword").value = "";
+
+    await loadClients();
+
+  } catch(error) {
+    message("ERRO AO CRIAR: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "CRIAR CLIENTE";
+  }
 });
+
+// LISTAR CLIENTES
+async function loadClients() {
+  $("clientList").innerHTML = "<p class='subtitle'>A carregar...</p>";
+
+  try {
+    const data = await management("list");
+    clients = data.clients || [];
+    renderClients(clients);
+    updateStats();
+  } catch(error) {
+    $("clientList").textContent = "Erro: " + error.message;
+    message("Erro ao carregar clientes: " + error.message);
+  }
+}
+
+function updateStats() {
+  $("total").textContent = clients.length;
+  $("active").textContent = clients.filter(c => c.status === "active").length;
+  $("expired").textContent = clients.filter(c => c.status === "expired").length;
+}
+
+// MOSTRAR CLIENTES
+function renderClients(items) {
+  const list = $("clientList");
+
+  if (!items.length) {
+    list.innerHTML = "<p class='subtitle'>Nenhum cliente encontrado.</p>";
+    return;
+  }
+
+  list.innerHTML = items.map(client => {
+    const username = escapeHTML(client.username);
+    const status = escapeHTML(client.status);
+    const expiration = client.expires_at
+      ? new Date(client.expires_at).toLocaleString("pt-PT", {
+          dateStyle:"short",timeStyle:"short",timeZone:"Africa/Luanda"
+        })
+      : "Sem expiração";
+
+    const statusLabel = {
+      active:"ACTIVO",
+      blocked:"BLOQUEADO",
+      expired:"EXPIRADO"
+    }[client.status] || status;
+
+    return `
+      <div class="client">
+        <strong>${username}</strong>
+        <p>Estado: ${statusLabel}</p>
+        <p>Expiração: ${escapeHTML(expiration)}</p>
+
+        <select class="renew-days">
+          <option value="7">Renovar 7 dias</option>
+          <option value="15">Renovar 15 dias</option>
+          <option value="30" selected>Renovar 30 dias</option>
+          <option value="90">Renovar 90 dias</option>
+          <option value="120">Renovar 120 dias</option>
+        </select>
+
+        <div class="actions">
+          <button data-action="renew" data-user="${username}">RENOVAR</button>
+          <button class="secondary" data-action="toggle" data-user="${username}">
+            ${client.status === "blocked" ? "DESBLOQUEAR" : "BLOQUEAR"}
+          </button>
+          <button class="secondary" data-action="reset" data-user="${username}">
+            ALTERAR SENHA
+          </button>
+          <button class="danger" data-action="delete" data-user="${username}">
+            ELIMINAR
+          </button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+// ACÇÕES DOS CLIENTES
+$("clientList").addEventListener("click", async event => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  const username = button.dataset.user;
+  const action = button.dataset.action;
+
+  try {
+    button.disabled = true;
+
+    if (action === "renew") {
+      const card = button.closest(".client");
+      const days = Number(card.querySelector(".renew-days").value);
+
+      await management("renew",{username,days});
+      message("Conta de " + username + " renovada!", true);
+    }
+
+    if (action === "toggle") {
+      const client = clients.find(c => c.username === username);
+      const status = client.status === "blocked" ? "active" : "blocked";
+
+      await management("set_status",{username,status});
+      message("Estado actualizado.", true);
+    }
+
+    if (action === "reset") {
+      const password = prompt("Introduz a nova palavra-passe (mínimo 8 caracteres):");
+      if (password === null) return;
+
+      if (password.length < 8 || password.length > 72) {
+        throw new Error("A palavra-passe deve ter entre 8 e 72 caracteres.");
+      }
+
+      await management("reset_password",{username,password});
+      message("Palavra-passe redefinida!", true);
+    }
+
+    if (action === "delete") {
+      if (!confirm("Tens a certeza de que queres eliminar " + username + "? Esta acção é permanente.")) return;
+
+      await management("delete",{username});
+      message("Cliente eliminado.", true);
+    }
+
+    await loadClients();
+
+  } catch(error) {
+    message("ERRO: " + error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+// PESQUISAR
+function filterClients() {
+  const query = $("search").value.toLowerCase();
+  renderClients(clients.filter(c =>
+    c.username.toLowerCase().includes(query)
+  ));
+}
+
+// ACTUALIZAR
+$("refreshBtn").addEventListener("click", loadClients);
 
 // TERMINAR SESSÃO
-
-document.getElementById("logoutBtn").addEventListener("click", function() {
-
+$("logoutBtn").addEventListener("click", () => {
   accessToken = null;
-  adminEmail = null;
-
+  clients = [];
   location.reload();
-
 });
-
 </script>
 </body>
 </html>
