@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVINHO VPN PRO - Pagamento</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #071b32, #102f50);
+      color: white;
+      padding: 22px 14px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .topo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      color: #36d399;
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .topo p {
+      color: #b8cadb;
+      font-size: 14px;
+    }
+
+    .cartao {
+      background: #102b46;
+      padding: 19px;
+      border-radius: 13px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin-bottom: 15px;
+    }
+
+    .plano-resumo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plano-resumo strong {
+      color: #36d399;
+      font-size: 20px;
+    }
+
+    .metodo {
+      border-bottom: 1px solid #294967;
+      padding: 14px 0;
+    }
+
+    .metodo:last-child {
+      border-bottom: none;
+    }
+
+    .metodo-nome {
+      color: #36d399;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .dados {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .numero {
+      font-size: 14px;
+      overflow-wrap: anywhere;
+      color: white;
+    }
+
+    .copiar {
+      border: 1px solid #36d399;
+      background: transparent;
+      color: #36d399;
+      border-radius: 7px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .titular {
+      color: #b8cadb;
+      font-size: 13px;
+      margin-top: 7px;
+    }
+
+    .instrucoes {
+      color: #c3d3e3;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #42617e;
+      border-radius: 9px;
+      background: #071b32;
+      color: white;
+      font-size: 13px;
+    }
+
+    #nomeFicheiro {
+      color: #36d399;
+      font-size: 12px;
+      margin-top: 9px;
+      overflow-wrap: anywhere;
+    }
+
+    .botao-principal {
+      width: 100%;
+      padding: 15px;
+      margin-top: 18px;
+      border: none;
+      border-radius: 9px;
+      background: #36d399;
+      color: #071b32;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .botao-principal:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .botao-voltar {
+      background: transparent;
+      color: white;
+      border: 1px solid #42617e;
+      margin-top: 10px;
+    }
+
+    #mensagem {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .aviso {
+      color: #f5d58a;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    .rodape {
+      text-align: center;
+      color: #9eb3c8;
+      font-size: 12px;
+      margin: 25px 0 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header class="topo">
+      <div class="logo">NOVINHO VPN PRO</div>
+      <p>Pagamento e envio de comprovativo</p>
+    </header>
+
+    <section class="cartao">
+      <h2>O teu plano seleccionado</h2>
+
+      <div class="plano-resumo">
+        <span id="planoNome">A carregar...</span>
+        <strong id="planoValor">---</strong>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Dados para pagamento</h2>
+
+      <div class="metodo">
+        <div class="metodo-nome">Multicaixa Express</div>
+        <div class="dados">
+          <span class="numero">973717551</span>
+          <button class="copiar" data-copy="973717551">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">IBAN</div>
+        <div class="dados">
+          <span class="numero">0040.0000.3895.1056.1011.6</span>
+          <button class="copiar" data-copy="0040.0000.3895.1056.1011.6">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">Número da conta</div>
+        <div class="dados">
+          <span class="numero">238.951.056.100.01</span>
+          <button class="copiar" data-copy="238.951.056.100.01">COPIAR</button>
+        </div>
+        <p class="titular">Titular: HERMENEGILDO Boano Henriques</p>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">Unitel Money</div>
+        <div class="dados">
+          <span class="numero">973717551</span>
+          <button class="copiar" data-copy="973717551">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">PayPay</div>
+        <div class="dados">
+          <span class="numero">973717551</span>
+          <button class="copiar" data-copy="973717551">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">AirTM</div>
+        <div class="dados">
+          <span class="numero">henryboano@gmail.com</span>
+          <button class="copiar" data-copy="henryboano@gmail.com">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">RedotPay ID</div>
+        <div class="dados">
+          <span class="numero">1283295047</span>
+          <button class="copiar" data-copy="1283295047">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">Binance ID</div>
+        <div class="dados">
+          <span class="numero">1087445941</span>
+          <button class="copiar" data-copy="1087445941">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="metodo">
+        <div class="metodo-nome">Bybit ID</div>
+        <div class="dados">
+          <span class="numero">492532173</span>
+          <button class="copiar" data-copy="492532173">COPIAR</button>
+        </div>
+      </div>
+
+      <p class="aviso">
+        Confirma sempre os dados e o nome do destinatário antes de efectuar
+        qualquer transferência.
+      </p>
+    </section>
+
+    <section class="cartao">
+      <h2>Enviar comprovativo</h2>
+
+      <p class="instrucoes">
+        Depois de efectuar o pagamento, selecciona a imagem ou o PDF
+        do comprovativo e envia para análise do administrador.
+      </p>
+
+      <input
+        type="file"
+        id="comprovativo"
+        accept="image/jpeg,image/png,image/webp,application/pdf"
+      >
+
+      <p id="nomeFicheiro">Nenhum ficheiro seleccionado.</p>
+
+      <button class="botao-principal" id="enviar">
+        ENVIAR COMPROVATIVO
+      </button>
+
+      <button
+        class="botao-principal botao-voltar"
+        id="voltar"
+      >
+        VOLTAR AOS PLANOS
+      </button>
+
+      <p id="mensagem" role="status" aria-live="polite"></p>
+    </section>
+
+    <footer class="rodape">
+      NOVINHO VPN PRO © 2026
+    </footer>
+
+  </main>
+
+  <script>
+    const SUPABASE_URL =
+      "https://yaawdvqonfxnyiedcddq.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+
+    const supabaseCliente = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      }
+    );
+
+    const planos = {
+      5: 3500,
+      15: 7000,
+      30: 10000,
+      60: 19500,
+      120: 35000
+    };
+
+    const mensagem = document.getElementById("mensagem");
+    const botaoEnviar = document.getElementById("enviar");
+    const campoFicheiro = document.getElementById("comprovativo");
+
+    let utilizador = null;
+    let planoDias = 0;
+    let planoValor = 0;
+
+    function mostrarMensagem(texto, cor) {
+      mensagem.textContent = texto;
+      mensagem.style.color = cor;
+    }
+
+    async function iniciarPagina() {
+      try {
+        const accessToken = sessionStorage.getItem(
+          "novinho_access_token"
+        );
+
+        const refreshToken = sessionStorage.getItem(
+          "novinho_refresh_token"
+        );
+
+        if (!accessToken || !refreshToken) {
+          window.location.replace("cliente.html");
+          return;
+        }
+
+        const { data, error } =
+          await supabaseCliente.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+
+        if (error || !data.session) {
+          throw new Error("A tua sessão expirou. Entra novamente.");
+        }
+
+        utilizador = data.session.user;
+
+        sessionStorage.setItem(
+          "novinho_access_token",
+          data.session.access_token
+        );
+
+        sessionStorage.setItem(
+          "novinho_refresh_token",
+          data.session.refresh_token
+        );
+
+        const { data: perfil, error: erroPerfil } =
+          await supabaseCliente
+            .from("user_profiles")
+            .select("role")
+            .eq("id", utilizador.id)
+            .single();
+
+        if (erroPerfil || !perfil || perfil.role !== "client") {
+          throw new Error("Não foi possível validar a tua conta.");
+        }
+
+        planoDias = Number(
+          sessionStorage.getItem("novinho_plan_days")
+        );
+
+        planoValor = Number(
+          sessionStorage.getItem("novinho_plan_amount")
+        );
+
+        if (
+          !planos[planoDias] ||
+          planos[planoDias] !== planoValor
+        ) {
+          throw new Error(
+            "Plano não seleccionado correctamente. Volta à página dos planos."
+          );
+        }
+
+        document.getElementById("planoNome").textContent =
+          planoDias + " dias de assinatura";
+
+        document.getElementById("planoValor").textContent =
+          planoValor.toLocaleString("pt-PT") + " Kz";
+
+      } catch (erro) {
+        mostrarMensagem(erro.message, "#ff7777");
+        botaoEnviar.disabled = true;
+      }
+    }
+
+    document.querySelectorAll("[data-copy]").forEach(function (botao) {
+      botao.addEventListener("click", async function () {
+        const texto = botao.dataset.copy;
+
+        try {
+          await navigator.clipboard.writeText(texto);
+          botao.textContent = "COPIADO!";
+          setTimeout(() => {
+            botao.textContent = "COPIAR";
+          }, 1500);
+        } catch (erro) {
+          mostrarMensagem(
+            "Não foi possível copiar. Selecciona o número manualmente.",
+            "#f5d58a"
+          );
+        }
+      });
+    });
+
+    campoFicheiro.addEventListener("change", function () {
+      const ficheiro = campoFicheiro.files[0];
+
+      document.getElementById("nomeFicheiro").textContent =
+        ficheiro ? ficheiro.name : "Nenhum ficheiro seleccionado.";
+    });
+
+    document.getElementById("voltar").addEventListener("click", function () {
+      window.location.href = "planos.html";
+    });
+
+    botaoEnviar.addEventListener("click", async function () {
+      const ficheiro = campoFicheiro.files[0];
+
+      if (!utilizador || !planos[planoDias]) {
+        mostrarMensagem(
+          "A conta ou o plano ainda não foram validados.",
+          "#ff7777"
+        );
+        return;
+      }
+
+      if (!ficheiro) {
+        mostrarMensagem(
+          "Selecciona primeiro o comprovativo de pagamento.",
+          "#ff7777"
+        );
+        return;
+      }
+
+      const tiposPermitidos = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf"
+      ];
+
+      if (!tiposPermitidos.includes(ficheiro.type)) {
+        mostrarMensagem(
+          "Formato não permitido. Envia JPG, PNG, WEBP ou PDF.",
+          "#ff7777"
+        );
+        return;
+      }
+
+      if (ficheiro.size > 5 * 1024 * 1024) {
+        mostrarMensagem(
+          "O ficheiro não pode ultrapassar 5 MB.",
+          "#ff7777"
+        );
+        return;
+      }
+
+      botaoEnviar.disabled = true;
+      botaoEnviar.textContent = "A ENVIAR...";
+      mostrarMensagem("A enviar o comprovativo. Aguarda...", "#ffffff");
+
+      let envioConcluido = false;
+
+      try {
+        const extensao = ficheiro.name.split(".").pop().toLowerCase();
+
+        const nomeSeguro =
+          Date.now() + "_" +
+          Math.random().toString(36).slice(2) +
+          "." + extensao;
+
+        const caminho = utilizador.id + "/" + nomeSeguro;
+
+        const { error: erroUpload } =
+          await supabaseCliente.storage
+            .from("comprovativos")
+            .upload(caminho, ficheiro, {
+              cacheControl: "3600",
+              upsert: false,
+              contentType: ficheiro.type
+            });
+
+        if (erroUpload) {
+          throw erroUpload;
+        }
+
+        const { error: erroPedido } =
+          await supabaseCliente
+            .from("payment_requests")
+            .insert({
+              user_id: utilizador.id,
+              plan_days: planoDias,
+              amount_kz: planoValor,
+              proof_path: caminho,
+              status: "pending"
+            });
+
+        if (erroPedido) {
+          throw erroPedido;
+        }
+
+        envioConcluido = true;
+
+        mostrarMensagem(
+          "Comprovativo enviado com sucesso! O pagamento aguarda aprovação do administrador.",
+          "#36d399"
+        );
+
+        botaoEnviar.textContent = "COMPROVATIVO ENVIADO";
+
+        campoFicheiro.disabled = true;
+
+        setTimeout(function () {
+          window.location.href = "painel.html";
+        }, 3000);
+
+      } catch (erro) {
+        console.error("Erro no envio:", erro);
+
+        mostrarMensagem(
+          "Não foi possível concluir o envio: " +
+          (erro.message || "Erro desconhecido.") +
+          ". Se o ficheiro já tiver sido carregado, contacta o suporte antes de tentares novamente.",
+          "#ff7777"
+        );
+      }
+
+      if (!envioConcluido) {
+        botaoEnviar.disabled = false;
+        botaoEnviar.textContent = "ENVIAR COMPROVATIVO";
+      }
+    });
+
+    iniciarPagina();
+  </script>
+
+</body>
+</html>
