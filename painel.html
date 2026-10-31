@@ -2,527 +2,442 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#07111f">
-  <title>Painel do Cliente | NOVINHO VPN PRO</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>Painel do Cliente | NOVINHO VPN PRO</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #07111f;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      margin: 35px auto;
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .logo h1 {
-      color: #19d3a2;
-      font-size: 27px;
-      font-weight: 900;
-    }
-
-    .logo p {
-      color: #9caec2;
-      font-size: 12px;
-      margin-top: 8px;
-      letter-spacing: 2px;
-    }
-
-    .card {
-      background: #101e30;
-      border: 1px solid #24364c;
-      border-radius: 16px;
-      padding: 22px;
-      margin-bottom: 18px;
-    }
-
-    h2 {
-      font-size: 21px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #9caec2;
-      font-size: 13px;
-      margin-bottom: 22px;
-      line-height: 1.5;
-    }
-
-    .info {
-      background: #0a1727;
-      border: 1px solid #24364c;
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .info small {
-      display: block;
-      color: #8fa5bc;
-      font-size: 12px;
-      margin-bottom: 7px;
-    }
-
-    .info strong {
-      font-size: 15px;
-      overflow-wrap: anywhere;
-    }
-
-    .status-active {
-      color: #19d3a2;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 35px 10px;
-      color: #b9c8d8;
-      font-size: 14px;
-    }
-
-    .spinner {
-      width: 35px;
-      height: 35px;
-      border: 4px solid #26394e;
-      border-top-color: #19d3a2;
-      border-radius: 50%;
-      margin: 0 auto 18px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .error {
-      display: none;
-      background: #351b25;
-      border: 1px solid #85364c;
-      color: #ffb6c4;
-      padding: 17px;
-      border-radius: 10px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .vpn-status {
-      background: #0a1727;
-      border: 1px solid #24364c;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .vpn-circle {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 15px;
-      border-radius: 50%;
-      background: #26394e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-    }
-
-    .vpn-circle.connected {
-      background: #103c35;
-      border: 2px solid #19d3a2;
-    }
-
-    .vpn-status h3 {
-      font-size: 18px;
-      margin-bottom: 7px;
-    }
-
-    .vpn-status p {
-      color: #9caec2;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .simulation-note {
-      color: #f4c66a !important;
-      margin-top: 10px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .btn-connect {
-      background: #19d3a2;
-      color: #06131d;
-    }
-
-    .btn-disconnect {
-      background: #e34b60;
-      color: white;
-    }
-
-    .btn-logout {
-      background: #26394e;
-      color: white;
-      margin-top: 20px;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .footer {
-      text-align: center;
-      color: #71859b;
-      font-size: 11px;
-      margin-top: 22px;
-    }
-
-    #dashboard {
-      display: none;
-    }
-  </style>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#07111f;color:#fff;font-family:Arial,sans-serif;padding:20px}
+.container{width:100%;max-width:500px;margin:35px auto}
+.logo{text-align:center;margin-bottom:25px}
+.logo h1{color:#19d3a2;font-size:27px;font-weight:900}
+.logo p{color:#9caec2;font-size:12px;margin-top:8px;letter-spacing:2px}
+.card{background:#101e30;border:1px solid #24364c;border-radius:16px;padding:22px;margin-bottom:18px}
+h2{font-size:21px;margin-bottom:8px}
+.subtitle{color:#9caec2;font-size:13px;margin-bottom:22px;line-height:1.5}
+.info{background:#0a1727;border:1px solid #24364c;border-radius:10px;padding:14px;margin-bottom:12px}
+.info small{display:block;color:#8fa5bc;font-size:12px;margin-bottom:7px}
+.info strong{font-size:15px;overflow-wrap:anywhere}
+.status-active{color:#19d3a2}
+.loading{text-align:center;padding:25px 10px;color:#b9c8d8;font-size:14px}
+.spinner{width:35px;height:35px;border:4px solid #26394e;border-top-color:#19d3a2;border-radius:50%;margin:0 auto 18px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error{display:none;background:#351b25;border:1px solid #85364c;color:#ffb6c4;padding:17px;border-radius:10px;font-size:14px;line-height:1.6}
+.payment-item{background:#0a1727;border:1px solid #24364c;border-radius:12px;padding:15px;margin-bottom:12px}
+.payment-item p{color:#9caec2;font-size:13px;margin:7px 0;line-height:1.5}
+.payment-item strong{color:#fff}
+.payment-status{display:inline-block;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:bold;margin-top:5px}
+.pending{color:#f4c66a;background:#45391e}
+.approved{color:#19d3a2;background:#103c35}
+.rejected{color:#ff9aaa;background:#492532}
+.empty{color:#9caec2;font-size:13px;line-height:1.6;padding:12px 0}
+.vpn-status{background:#0a1727;border:1px solid #24364c;border-radius:12px;padding:20px;text-align:center;margin-bottom:15px}
+.vpn-circle{width:70px;height:70px;margin:0 auto 15px;border-radius:50%;background:#26394e;display:flex;align-items:center;justify-content:center;font-size:30px}
+.vpn-status h3{font-size:18px;margin-bottom:7px;color:#f4c66a}
+.vpn-status p{color:#9caec2;font-size:12px;line-height:1.5}
+.btn{width:100%;padding:15px;border:none;border-radius:10px;font-size:14px;font-weight:bold;margin-top:10px}
+.btn-connect{background:#26394e;color:#b9c8d8;cursor:not-allowed}
+.btn-logout{background:#26394e;color:white;cursor:pointer;margin-top:20px}
+.btn:disabled{opacity:.75;cursor:not-allowed}
+.footer{text-align:center;color:#71859b;font-size:11px;margin-top:22px}
+#dashboard,#paymentsCard,#vpnCard{display:none}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <div class="logo">
-    <h1>NOVINHO VPN PRO</h1>
-    <p>ÁREA PRIVADA DO CLIENTE</p>
-  </div>
+<div class="logo">
+<h1>NOVINHO VPN PRO</h1>
+<p>ÁREA PRIVADA DO CLIENTE</p>
+</div>
 
-  <div class="card">
+<div class="card">
 
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      A verificar a tua conta...
-    </div>
+<div id="loading" class="loading">
+<div class="spinner"></div>
+A verificar a tua conta...
+</div>
 
-    <div id="error" class="error"></div>
+<div id="error" class="error"></div>
 
-    <div id="dashboard">
+<div id="dashboard">
 
-      <h2>Bem-vindo!</h2>
+<h2>Bem-vindo!</h2>
+<p class="subtitle">A tua conta foi identificada com sucesso.</p>
 
-      <p class="subtitle">
-        A tua conta foi identificada com sucesso.
-      </p>
+<div class="info">
+<small>Nome de utilizador</small>
+<strong id="username">---</strong>
+</div>
 
-      <div class="info">
-        <small>Nome de utilizador</small>
-        <strong id="username">---</strong>
-      </div>
+<div class="info">
+<small>Estado da conta</small>
+<strong id="accountStatus" class="status-active">---</strong>
+</div>
 
-      <div class="info">
-        <small>Estado da conta</small>
-        <strong id="accountStatus" class="status-active">---</strong>
-      </div>
+<div class="info">
+<small>Validade da conta</small>
+<strong id="expires">---</strong>
+</div>
 
-      <div class="info">
-        <small>Validade da conta</small>
-        <strong id="expires">---</strong>
-      </div>
+<button class="btn btn-logout" onclick="logout()" id="logoutBtn">
+TERMINAR SESSÃO
+</button>
 
-      <button class="btn btn-logout" onclick="logout()" id="logoutBtn">
-        TERMINAR SESSÃO
-      </button>
+</div>
+</div>
 
-    </div>
-  </div>
+<!-- HISTÓRICO DE PAGAMENTOS -->
 
-  <div class="card" id="vpnCard" style="display:none">
+<div class="card" id="paymentsCard">
 
-    <h2>Minha VPN</h2>
+<h2>Meus pagamentos</h2>
+<p class="subtitle">Consulta os teus pedidos de pagamento e respectivos estados.</p>
 
-    <p class="subtitle">
-      Controla o estado da tua ligação.
-    </p>
+<div id="paymentsLoading" class="loading">
+<div class="spinner"></div>
+A carregar os teus pedidos...
+</div>
 
-    <div class="vpn-status">
+<div id="paymentsError" class="error"></div>
+<div id="paymentsList"></div>
 
-      <div class="vpn-circle" id="vpnCircle">🔒</div>
+</div>
 
-      <h3 id="vpnTitle">DESLIGADA</h3>
+<!-- ÁREA VPN -->
 
-      <p id="vpnDescription">
-        A VPN está desligada.
-      </p>
+<div class="card" id="vpnCard">
 
-      <p class="simulation-note">
-        MODO DE SIMULAÇÃO — sem ligação VPN real.
-      </p>
+<h2>Minha VPN</h2>
+<p class="subtitle">Consulta o estado do serviço.</p>
 
-    </div>
+<div class="vpn-status">
+<div class="vpn-circle">🔒</div>
+<h3>SERVIÇO EM PREPARAÇÃO</h3>
+<p>A ligação VPN ainda não está disponível. Estamos a preparar o serviço para a tua utilização.</p>
+</div>
 
-    <button
-      class="btn btn-connect"
-      id="connectBtn"
-      onclick="connectVPN()">
-      CONECTAR VPN
-    </button>
+<button class="btn btn-connect" disabled>
+LIGAÇÃO EM PREPARAÇÃO
+</button>
 
-    <button
-      class="btn btn-disconnect"
-      id="disconnectBtn"
-      onclick="disconnectVPN()"
-      style="display:none">
-      DESCONECTAR VPN
-    </button>
+</div>
 
-  </div>
-
-  <div class="footer">
-    © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
-  </div>
+<div class="footer">
+© 2026 NOVINHO VPN PRO. Todos os direitos reservados.
+</div>
 
 </div>
 
 <script>
-  // CONFIGURAÇÃO SUPABASE
+"use strict";
 
-  const SUPABASE_URL =
-    "https://yaawdvqonfxnyiedcddq.supabase.co";
+// CONFIGURAÇÃO SUPABASE
 
-  const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
+);
+
+const loading = document.getElementById("loading");
+const errorBox = document.getElementById("error");
+const dashboard = document.getElementById("dashboard");
+const vpnCard = document.getElementById("vpnCard");
+const paymentsCard = document.getElementById("paymentsCard");
+
+let carregamentoIniciado = false;
+
+function showError(message) {
+  loading.style.display = "none";
+  dashboard.style.display = "none";
+  vpnCard.style.display = "none";
+  paymentsCard.style.display = "none";
+  errorBox.style.display = "block";
+  errorBox.textContent = message;
+}
+
+function formatDate(value) {
+  if (!value) return "Não definida pelo administrador";
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) return "Data indisponível";
+
+  return date.toLocaleDateString("pt-AO", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "Africa/Luanda"
+  });
+}
+
+function formatDateTime(value) {
+  if (!value) return "Não disponível";
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) return "Data indisponível";
+
+  return date.toLocaleString("pt-AO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Africa/Luanda"
+  });
+}
+
+function statusLabel(status) {
+  if (status === "approved") return "APROVADO";
+  if (status === "rejected") return "REJEITADO";
+  return "PENDENTE";
+}
+
+function statusClass(status) {
+  if (status === "approved") return "approved";
+  if (status === "rejected") return "rejected";
+  return "pending";
+}
+
+// HISTÓRICO DE PAGAMENTOS
+
+async function carregarPedidos(userId) {
+
+  const paymentsLoading = document.getElementById("paymentsLoading");
+  const paymentsError = document.getElementById("paymentsError");
+  const paymentsList = document.getElementById("paymentsList");
+
+  paymentsCard.style.display = "block";
+  paymentsLoading.style.display = "block";
+  paymentsError.style.display = "none";
+  paymentsList.innerHTML = "";
+
+  try {
+
+    const { data, error } = await supabaseClient
+      .from("payment_requests")
+      .select("id, plan_days, amount_kz, status, admin_note, created_at, reviewed_at, activated_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    paymentsLoading.style.display = "none";
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      paymentsList.innerHTML =
+        '<p class="empty">Ainda não tens pedidos de pagamento registados.</p>';
+      return;
+    }
+
+    data.forEach(pedido => {
+
+      const item = document.createElement("div");
+      item.className = "payment-item";
+
+      const titulo = document.createElement("strong");
+      titulo.textContent = "Plano de " + pedido.plan_days + " dias";
+
+      const valor = document.createElement("p");
+      valor.textContent = "Valor: " +
+        Number(pedido.amount_kz).toLocaleString("pt-AO") + " Kz";
+
+      const dataPedido = document.createElement("p");
+      dataPedido.textContent =
+        "Data do pedido: " + formatDateTime(pedido.created_at);
+
+      const estado = document.createElement("span");
+      estado.className =
+        "payment-status " + statusClass(pedido.status);
+      estado.textContent = statusLabel(pedido.status);
+
+      item.appendChild(titulo);
+      item.appendChild(valor);
+      item.appendChild(dataPedido);
+      item.appendChild(estado);
+
+      if (pedido.reviewed_at) {
+        const analise = document.createElement("p");
+        analise.textContent =
+          "Data da análise: " + formatDateTime(pedido.reviewed_at);
+        item.appendChild(analise);
+      }
+
+      if (pedido.activated_at) {
+        const ativacao = document.createElement("p");
+        ativacao.textContent =
+          "Assinatura activada: " + formatDateTime(pedido.activated_at);
+        item.appendChild(ativacao);
+      }
+
+      if (pedido.admin_note) {
+        const nota = document.createElement("p");
+        nota.textContent =
+          "Nota do administrador: " + pedido.admin_note;
+        item.appendChild(nota);
+      }
+
+      paymentsList.appendChild(item);
+
+    });
+
+  } catch (error) {
+
+    console.error("Erro no histórico:", error);
+
+    paymentsLoading.style.display = "none";
+    paymentsError.style.display = "block";
+    paymentsError.textContent =
+      "Não foi possível carregar o histórico. Verifica a ligação à internet e tenta novamente.";
+
+  }
+}
+
+// CARREGAR CONTA
+
+async function loadDashboard() {
+
+  if (carregamentoIniciado) return;
+  carregamentoIniciado = true;
+
+  // IMPORTANTE: usar os nomes exactos do cliente.html
+
+  const accessToken =
+    sessionStorage.getItem("novinho_access_token");
+
+  const refreshToken =
+    sessionStorage.getItem("novinho_refresh_token");
+
+  if (!accessToken || !refreshToken) {
+    showError("Sessão não encontrada. Volta à área do cliente e inicia sessão novamente.");
+    return;
+  }
+
+  const { data: sessionData, error: sessionError } =
+    await supabaseClient.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken
+    });
+
+  if (sessionError || !sessionData.session) {
+    sessionStorage.removeItem("novinho_access_token");
+    sessionStorage.removeItem("novinho_refresh_token");
+    showError("A tua sessão expirou. Volta à área do cliente e inicia sessão novamente.");
+    return;
+  }
+
+  // Guardar os tokens actualizados com os mesmos nomes
+
+  sessionStorage.setItem(
+    "novinho_access_token",
+    sessionData.session.access_token
   );
 
-  const loading = document.getElementById("loading");
-  const errorBox = document.getElementById("error");
-  const dashboard = document.getElementById("dashboard");
-  const vpnCard = document.getElementById("vpnCard");
+  sessionStorage.setItem(
+    "novinho_refresh_token",
+    sessionData.session.refresh_token
+  );
 
-  function showError(message) {
-    loading.style.display = "none";
-    dashboard.style.display = "none";
-    vpnCard.style.display = "none";
-    errorBox.style.display = "block";
-    errorBox.textContent = message;
+  const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+  if (userError || !userData.user) {
+    showError("Não foi possível identificar a tua conta. Inicia sessão novamente.");
+    return;
   }
 
-  function formatDate(value) {
-    if (!value) {
-      return "Não definida pelo administrador";
-    }
+  const { data: profile, error: profileError } =
+    await supabaseClient
+      .from("user_profiles")
+      .select("username, role, status, expires_at")
+      .eq("id", userData.user.id)
+      .single();
 
-    const date = new Date(value);
-
-    if (isNaN(date.getTime())) {
-      return "Data indisponível";
-    }
-
-    return date.toLocaleDateString("pt-AO", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric"
-    });
+  if (profileError || !profile) {
+    console.error("Erro no perfil:", profileError);
+    showError("Não foi possível carregar os dados da tua conta.");
+    return;
   }
 
-  async function loadDashboard() {
-    const accessToken =
-      sessionStorage.getItem("access_token");
-
-    const refreshToken =
-      sessionStorage.getItem("refresh_token");
-
-    if (!accessToken || !refreshToken) {
-      window.location.replace("cliente.html");
-      return;
-    }
-
-    const { data: sessionData, error: sessionError } =
-      await supabaseClient.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken
-      });
-
-    if (sessionError || !sessionData.session) {
-      sessionStorage.removeItem("access_token");
-      sessionStorage.removeItem("refresh_token");
-      window.location.replace("cliente.html");
-      return;
-    }
-
-    sessionStorage.setItem(
-      "access_token",
-      sessionData.session.access_token
-    );
-
-    sessionStorage.setItem(
-      "refresh_token",
-      sessionData.session.refresh_token
-    );
-
-    const { data: userData, error: userError } =
-      await supabaseClient.auth.getUser();
-
-    if (userError || !userData.user) {
-      sessionStorage.removeItem("access_token");
-      sessionStorage.removeItem("refresh_token");
-      window.location.replace("cliente.html");
-      return;
-    }
-
-    const { data: profile, error: profileError } =
-      await supabaseClient
-        .from("user_profiles")
-        .select("username, role, status, expires_at")
-        .eq("id", userData.user.id)
-        .single();
-
-    if (profileError || !profile) {
-      throw new Error(
-        "Não foi possível carregar os dados da tua conta."
-      );
-    }
-
-    if (profile.role !== "client") {
-      throw new Error(
-        "Esta conta não tem autorização para entrar nesta área."
-      );
-    }
-
-    if (profile.status !== "active") {
-      throw new Error(
-        "A tua conta encontra-se bloqueada ou inactiva."
-      );
-    }
-
-    if (
-      profile.expires_at &&
-      new Date(profile.expires_at).getTime() <= Date.now()
-    ) {
-      throw new Error(
-        "A validade da tua conta terminou. Contacta o administrador."
-      );
-    }
-
-    document.getElementById("username").textContent =
-      profile.username;
-
-    document.getElementById("accountStatus").textContent =
-      "ACTIVA";
-
-    document.getElementById("expires").textContent =
-      formatDate(profile.expires_at);
-
-    loading.style.display = "none";
-    errorBox.style.display = "none";
-    dashboard.style.display = "block";
-    vpnCard.style.display = "block";
+  if (profile.role !== "client") {
+    showError("Esta conta não tem autorização para entrar nesta área.");
+    return;
   }
 
-  // SIMULAÇÃO DE LIGAÇÃO VPN
-
-  function connectVPN() {
-    const circle = document.getElementById("vpnCircle");
-
-    circle.classList.add("connected");
-    circle.textContent = "🟢";
-
-    document.getElementById("vpnTitle").textContent =
-      "CONECTADA (SIMULAÇÃO)";
-
-    document.getElementById("vpnDescription").textContent =
-      "A simulação da ligação foi iniciada com sucesso.";
-
-    document.getElementById("connectBtn").style.display =
-      "none";
-
-    document.getElementById("disconnectBtn").style.display =
-      "block";
+  if (profile.status !== "active") {
+    showError("A tua conta encontra-se bloqueada ou inactiva.");
+    return;
   }
 
-  function disconnectVPN() {
-    const circle = document.getElementById("vpnCircle");
-
-    circle.classList.remove("connected");
-    circle.textContent = "🔒";
-
-    document.getElementById("vpnTitle").textContent =
-      "DESLIGADA";
-
-    document.getElementById("vpnDescription").textContent =
-      "A VPN está desligada.";
-
-    document.getElementById("connectBtn").style.display =
-      "block";
-
-    document.getElementById("disconnectBtn").style.display =
-      "none";
+  if (
+    profile.expires_at &&
+    new Date(profile.expires_at).getTime() <= Date.now()
+  ) {
+    showError("A validade da tua conta terminou. Contacta o administrador.");
+    return;
   }
 
-  // TEMPO MÁXIMO DE ESPERA
+  document.getElementById("username").textContent = profile.username;
+  document.getElementById("accountStatus").textContent = "ACTIVA";
+  document.getElementById("expires").textContent =
+    formatDate(profile.expires_at);
 
-  const timeout = new Promise((_, reject) => {
-    setTimeout(() => {
-      reject(new Error(
-        "O servidor está a demorar a responder. Verifica a internet e tenta novamente."
-      ));
-    }, 15000);
-  });
+  loading.style.display = "none";
+  errorBox.style.display = "none";
+  dashboard.style.display = "block";
+  vpnCard.style.display = "block";
 
-  Promise.race([
-    loadDashboard(),
-    timeout
-  ]).catch(error => {
-    showError(
-      error.message || "Ocorreu um erro ao carregar a tua conta."
-    );
-  });
+  // Carregar histórico do cliente identificado
 
-  // TERMINAR SESSÃO
+  await carregarPedidos(userData.user.id);
+}
 
-  async function logout() {
-    const button = document.getElementById("logoutBtn");
+// INICIAR
 
-    button.disabled = true;
-    button.textContent = "A terminar sessão...";
+loadDashboard().catch(error => {
+  console.error("Erro ao iniciar painel:", error);
+  showError(error.message || "Ocorreu um erro ao carregar a tua conta.");
+});
 
-    try {
-      await supabaseClient.auth.signOut();
-    } catch (error) {
-      console.error(error);
-    }
+// TERMINAR SESSÃO
 
-    sessionStorage.removeItem("access_token");
-    sessionStorage.removeItem("refresh_token");
+async function logout() {
 
-    window.location.replace("cliente.html");
+  const button = document.getElementById("logoutBtn");
+
+  button.disabled = true;
+  button.textContent = "A terminar sessão...";
+
+  try {
+    await supabaseClient.auth.signOut();
+  } catch (error) {
+    console.error("Erro ao terminar sessão:", error);
   }
+
+  sessionStorage.removeItem("novinho_access_token");
+  sessionStorage.removeItem("novinho_refresh_token");
+  sessionStorage.removeItem("novinho_username");
+
+  window.location.replace("cliente.html");
+}
 </script>
 
 </body>
