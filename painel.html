@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 <title>Painel do Cliente | NOVINHO VPN PRO</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -62,7 +61,6 @@ h2{font-size:21px;margin-bottom:8px}
 </head>
 
 <body>
-
 <div class="container">
 
 <div class="logo">
@@ -71,7 +69,6 @@ h2{font-size:21px;margin-bottom:8px}
 </div>
 
 <div class="card">
-
 <div id="loading" class="loading">
 <div class="spinner"></div>
 A verificar a tua conta...
@@ -80,7 +77,6 @@ A verificar a tua conta...
 <div id="error" class="error"></div>
 
 <div id="dashboard">
-
 <h2>Bem-vindo!</h2>
 <p class="subtitle">A tua conta foi identificada com sucesso.</p>
 
@@ -104,7 +100,6 @@ A verificar a tua conta...
 <button class="btn btn-logout" onclick="logout()" id="logoutBtn">
 TERMINAR SESSÃO
 </button>
-
 </div>
 </div>
 
@@ -115,7 +110,6 @@ TERMINAR SESSÃO
 </div>
 
 <div class="card" id="paymentsCard">
-
 <h2>Meus pagamentos</h2>
 <p class="subtitle">Consulta os teus pedidos de pagamento e respectivos estados.</p>
 
@@ -126,11 +120,9 @@ A carregar os teus pedidos...
 
 <div id="paymentsError" class="error"></div>
 <div id="paymentsList"></div>
-
 </div>
 
 <div class="card" id="vpnCard">
-
 <h2>Minha VPN</h2>
 <p class="subtitle">Consulta o estado do serviço.</p>
 
@@ -143,7 +135,6 @@ A carregar os teus pedidos...
 <button class="btn btn-connect" disabled>
 LIGAÇÃO EM PREPARAÇÃO
 </button>
-
 </div>
 
 <div class="footer">
@@ -153,9 +144,7 @@ LIGAÇÃO EM PREPARAÇÃO
 </div>
 
 <script>
-"use strict";
-
-const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
+"use strict";const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
 const supabaseClient = window.supabase.createClient(
@@ -180,6 +169,7 @@ const notificationsCard = document.getElementById("notificationsCard");
 let carregamentoIniciado = false;
 let utilizadorId = null;
 let actualizacaoEmCurso = false;
+let intervaloActualizacao = null;
 
 function showError(message) {
   loading.style.display = "none";
@@ -236,7 +226,6 @@ function statusClass(status) {
 }
 
 function mostrarNotificacoes(pedidos) {
-
   const lista = document.getElementById("notificationsList");
   lista.innerHTML = "";
 
@@ -245,10 +234,7 @@ function mostrarNotificacoes(pedidos) {
     return;
   }
 
-  const recentes = pedidos.slice(0, 5);
-
-  recentes.forEach(pedido => {
-
+  pedidos.slice(0, 5).forEach(pedido => {
     const aviso = document.createElement("div");
     aviso.className = "notification";
 
@@ -256,53 +242,42 @@ function mostrarNotificacoes(pedidos) {
     const texto = document.createElement("p");
 
     if (pedido.status === "approved") {
-
       aviso.classList.add("notification-approved");
       titulo.textContent = "Pagamento aprovado!";
       texto.textContent =
         "O teu pagamento do plano de " + pedido.plan_days +
-        " dias foi aprovado. Consulta a validade da tua assinatura no painel.";
-
+        " dias foi aprovado. Consulta a validade da tua assinatura.";
     } else if (pedido.status === "rejected") {
-
       aviso.classList.add("notification-rejected");
       titulo.textContent = "Pagamento rejeitado";
       texto.textContent =
         "O teu pedido de pagamento do plano de " +
         pedido.plan_days + " dias foi rejeitado.";
-
-      if (pedido.admin_note) {
-        const nota = document.createElement("p");
-        nota.textContent =
-          "Informação do administrador: " + pedido.admin_note;
-        aviso.appendChild(titulo);
-        aviso.appendChild(texto);
-        aviso.appendChild(nota);
-        lista.appendChild(aviso);
-        return;
-      }
-
     } else {
-
       aviso.classList.add("notification-pending");
       titulo.textContent = "Pagamento em análise";
       texto.textContent =
         "O teu pagamento do plano de " + pedido.plan_days +
         " dias continua pendente. Aguarda a decisão do administrador.";
-
     }
 
     aviso.appendChild(titulo);
     aviso.appendChild(texto);
-    lista.appendChild(aviso);
 
+    if (pedido.status === "rejected" && pedido.admin_note) {
+      const nota = document.createElement("p");
+      nota.textContent =
+        "Informação do administrador: " + pedido.admin_note;
+      aviso.appendChild(nota);
+    }
+
+    lista.appendChild(aviso);
   });
 
   notificationsCard.style.display = "block";
 }
 
 async function carregarPedidos(userId) {
-
   const paymentsLoading = document.getElementById("paymentsLoading");
   const paymentsError = document.getElementById("paymentsError");
   const paymentsList = document.getElementById("paymentsList");
@@ -312,91 +287,77 @@ async function carregarPedidos(userId) {
   paymentsError.style.display = "none";
   paymentsList.innerHTML = "";
 
-  try {
+  const { data, error } = await supabaseClient
+    .from("payment_requests")
+    .select("id, plan_days, amount_kz, status, admin_note, created_at, reviewed_at, activated_at")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
-    const { data, error } = await supabaseClient
-      .from("payment_requests")
-      .select("id, plan_days, amount_kz, status, admin_note, created_at, reviewed_at, activated_at")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
+  paymentsLoading.style.display = "none";
 
-    paymentsLoading.style.display = "none";
+  if (error) throw error;
 
-    if (error) throw error;
+  mostrarNotificacoes(data);
 
-    mostrarNotificacoes(data);
+  if (!data || data.length === 0) {
+    paymentsList.innerHTML =
+      '<p class="empty">Ainda não tens pedidos de pagamento registados.</p>';
+    return data || [];
+  }
 
-    if (!data || data.length === 0) {
-      paymentsList.innerHTML =
-        '<p class="empty">Ainda não tens pedidos de pagamento registados. Escolhe um plano e envia o comprovativo para iniciar a análise.</p>';
-      return;
+  data.forEach(pedido => {
+    const item = document.createElement("div");
+    item.className = "payment-item";
+
+    const titulo = document.createElement("strong");
+    titulo.textContent = "Plano de " + pedido.plan_days + " dias";
+
+    const valor = document.createElement("p");
+    valor.textContent = "Valor: " +
+      Number(pedido.amount_kz).toLocaleString("pt-AO") + " Kz";
+
+    const dataPedido = document.createElement("p");
+    dataPedido.textContent =
+      "Data do pedido: " + formatDateTime(pedido.created_at);
+
+    const estado = document.createElement("span");
+    estado.className =
+      "payment-status " + statusClass(pedido.status);
+    estado.textContent = statusLabel(pedido.status);
+
+    item.appendChild(titulo);
+    item.appendChild(valor);
+    item.appendChild(dataPedido);
+    item.appendChild(estado);
+
+    if (pedido.reviewed_at) {
+      const analise = document.createElement("p");
+      analise.textContent =
+        "Data da análise: " + formatDateTime(pedido.reviewed_at);
+      item.appendChild(analise);
     }
 
-    data.forEach(pedido => {
+    if (pedido.activated_at) {
+      const ativacao = document.createElement("p");
+      ativacao.textContent =
+        "Assinatura activada: " + formatDateTime(pedido.activated_at);
+      item.appendChild(ativacao);
+    }
 
-      const item = document.createElement("div");
-      item.className = "payment-item";
+    if (pedido.admin_note) {
+      const nota = document.createElement("p");
+      nota.textContent =
+        "Nota do administrador: " + pedido.admin_note;
+      item.appendChild(nota);
+    }
 
-      const titulo = document.createElement("strong");
-      titulo.textContent = "Plano de " + pedido.plan_days + " dias";
+    paymentsList.appendChild(item);
+  });
 
-      const valor = document.createElement("p");
-      valor.textContent = "Valor: " +
-        Number(pedido.amount_kz).toLocaleString("pt-AO") + " Kz";
-
-      const dataPedido = document.createElement("p");
-      dataPedido.textContent =
-        "Data do pedido: " + formatDateTime(pedido.created_at);
-
-      const estado = document.createElement("span");
-      estado.className =
-        "payment-status " + statusClass(pedido.status);
-      estado.textContent = statusLabel(pedido.status);
-
-      item.appendChild(titulo);
-      item.appendChild(valor);
-      item.appendChild(dataPedido);
-      item.appendChild(estado);
-
-      if (pedido.reviewed_at) {
-        const analise = document.createElement("p");
-        analise.textContent =
-          "Data da análise: " + formatDateTime(pedido.reviewed_at);
-        item.appendChild(analise);
-      }
-
-      if (pedido.activated_at) {
-        const ativacao = document.createElement("p");
-        ativacao.textContent =
-          "Assinatura activada: " + formatDateTime(pedido.activated_at);
-        item.appendChild(ativacao);
-      }
-
-      if (pedido.admin_note) {
-        const nota = document.createElement("p");
-        nota.textContent =
-          "Nota do administrador: " + pedido.admin_note;
-        item.appendChild(nota);
-      }
-
-      paymentsList.appendChild(item);
-
-    });
-
-  } catch (error) {
-
-    console.error("Erro no histórico:", error);
-
-    paymentsLoading.style.display = "none";
-    paymentsError.style.display = "block";
-    paymentsError.textContent =
-      "Não foi possível carregar o histórico. Verifica a ligação à internet e tenta novamente.";
-
-  }
+  return data;
 }
 
 async function actualizarPerfil(userId) {
-
   const { data: profile, error: profileError } =
     await supabaseClient
       .from("user_profiles")
@@ -420,81 +381,104 @@ async function actualizarPerfil(userId) {
     throw new Error("O estado da tua conta não é reconhecido. Contacta o administrador.");
   }
 
-  const validadeTerminou =
-    profile.expires_at &&
-    new Date(profile.expires_at).getTime() <= Date.now();
+  return profile;
+  }function redireccionar(pagina) {
+  window.location.replace(pagina);
+}
 
-  let estadoTexto = "";
-  let estadoClasse = "";
-  let mensagem = "";
-  let mensagemClasse = "";
+async function verificarAcesso(userId) {
+  const profile = await actualizarPerfil(userId);
+  const pedidos = await carregarPedidos(userId);
 
-  if (profile.status === "pending") {
+  const agora = Date.now();
 
-    estadoTexto = "AGUARDANDO APROVAÇÃO";
-    estadoClasse = "status-pending";
+  const validade =
+    profile.expires_at
+      ? new Date(profile.expires_at).getTime()
+      : 0;
 
-    mensagem =
-      "A tua conta foi criada com sucesso. O pagamento ainda está pendente de aprovação pelo administrador. Consulta a área Meus pagamentos para acompanhar o pedido.";
+  const assinaturaValida =
+    profile.status === "active" &&
+    validade > agora;
 
-    mensagemClasse = "notice-pending";
-
-  } else if (profile.status === "expired" || validadeTerminou) {
-
-    estadoTexto = "VALIDADE EXPIRADA";
-    estadoClasse = "status-expired";
-
-    mensagem =
-      "A validade da tua assinatura terminou. Contacta o administrador para renovar o serviço.";
-
-    mensagemClasse = "notice-expired";
-
-  } else {
-
-    estadoTexto = "ACTIVA";
-    estadoClasse = "status-active";
-
-    mensagem =
-      "A tua conta está activa. Consulta a validade e acompanha as informações do serviço.";
-
-    mensagemClasse = "notice-active";
-
+  // Só clientes activos e com assinatura válida entram.
+  if (assinaturaValida) {
+    return profile;
   }
 
-  document.getElementById("username").textContent =
-    profile.username || "Cliente";
+  // Conta bloqueada ou com estado não autorizado.
+  if (profile.status === "blocked") {
+    throw new Error(
+      "A tua conta encontra-se bloqueada. Contacta o administrador."
+    );
+  }
 
-  const accountStatus = document.getElementById("accountStatus");
-  accountStatus.textContent = estadoTexto;
-  accountStatus.className = estadoClasse;
+  // Analisa o pedido de pagamento mais recente.
+  const ultimoPedido = pedidos.length > 0 ? pedidos[0] : null;
 
-  document.getElementById("expires").textContent =
-    formatDate(profile.expires_at);
+  if (!ultimoPedido) {
+    redireccionar("planos.html");
+    return null;
+  }
 
-  const accountMessage = document.getElementById("accountMessage");
-  accountMessage.textContent = mensagem;
-  accountMessage.className = "notice " + mensagemClasse;
+  if (
+    ultimoPedido.status === "pending" ||
+    ultimoPedido.status === "rejected" ||
+    ultimoPedido.status === "approved"
+  ) {
+    redireccionar("pagamentos.html");
+    return null;
+  }
+
+  // Conta expirada ou sem assinatura válida.
+  redireccionar("planos.html");
+  return null;
 }
 
 async function actualizarPainel() {
-
   if (!utilizadorId || actualizacaoEmCurso) return;
 
   actualizacaoEmCurso = true;
 
   try {
-    await actualizarPerfil(utilizadorId);
-    await carregarPedidos(utilizadorId);
+    const profile = await verificarAcesso(utilizadorId);
+
+    if (!profile) return;
+
+    document.getElementById("username").textContent =
+      profile.username || "Cliente";
+
+    document.getElementById("accountStatus").textContent =
+      "ACTIVA";
+
+    document.getElementById("accountStatus").className =
+      "status-active";
+
+    document.getElementById("expires").textContent =
+      formatDate(profile.expires_at);
+
+    const mensagem = document.getElementById("accountMessage");
+    mensagem.textContent =
+      "A tua conta está activa e a assinatura encontra-se dentro da validade.";
+
+    mensagem.className = "notice notice-active";
+
+    loading.style.display = "none";
+    errorBox.style.display = "none";
+    dashboard.style.display = "block";
+    vpnCard.style.display = "block";
+
   } catch (error) {
     console.error("Erro ao actualizar painel:", error);
+    showError(error.message);
   } finally {
     actualizacaoEmCurso = false;
   }
 }
 
 async function loadDashboard() {
-
   if (carregamentoIniciado) return;
+
   carregamentoIniciado = true;
 
   const accessToken =
@@ -504,7 +488,9 @@ async function loadDashboard() {
     sessionStorage.getItem("novinho_refresh_token");
 
   if (!accessToken || !refreshToken) {
-    showError("Sessão não encontrada. Volta à área do cliente e inicia sessão novamente.");
+    showError(
+      "Sessão não encontrada. Volta à área do cliente e inicia sessão novamente."
+    );
     return;
   }
 
@@ -517,7 +503,10 @@ async function loadDashboard() {
   if (sessionError || !sessionData.session) {
     sessionStorage.removeItem("novinho_access_token");
     sessionStorage.removeItem("novinho_refresh_token");
-    showError("A tua sessão expirou. Volta à área do cliente e inicia sessão novamente.");
+
+    showError(
+      "A tua sessão expirou. Volta à área do cliente e inicia sessão novamente."
+    );
     return;
   }
 
@@ -535,46 +524,74 @@ async function loadDashboard() {
     await supabaseClient.auth.getUser();
 
   if (userError || !userData.user) {
-    showError("Não foi possível identificar a tua conta. Inicia sessão novamente.");
+    showError(
+      "Não foi possível identificar a tua conta. Inicia sessão novamente."
+    );
     return;
   }
 
   utilizadorId = userData.user.id;
 
   try {
-    await actualizarPerfil(utilizadorId);
+    const profile = await verificarAcesso(utilizadorId);
+
+    // Se for redireccionado, não apresenta o painel.
+    if (!profile) return;
+
+    document.getElementById("username").textContent =
+      profile.username || "Cliente";
+
+    document.getElementById("accountStatus").textContent =
+      "ACTIVA";
+
+    document.getElementById("accountStatus").className =
+      "status-active";
+
+    document.getElementById("expires").textContent =
+      formatDate(profile.expires_at);
+
+    const mensagem = document.getElementById("accountMessage");
+
+    mensagem.textContent =
+      "A tua conta está activa e a assinatura encontra-se dentro da validade.";
+
+    mensagem.className = "notice notice-active";
 
     loading.style.display = "none";
     errorBox.style.display = "none";
     dashboard.style.display = "block";
     vpnCard.style.display = "block";
 
-    await carregarPedidos(utilizadorId);
-
-    // Actualiza o painel a cada 15 segundos enquanto estiver aberto.
-    setInterval(() => {
+    // Volta a verificar a autorização a cada 15 segundos.
+    intervaloActualizacao = setInterval(() => {
       if (!document.hidden) {
         actualizarPainel();
       }
     }, 15000);
 
   } catch (error) {
-    console.error("Erro no perfil:", error);
+    console.error("Erro ao iniciar painel:", error);
     showError(error.message);
   }
 }
 
 loadDashboard().catch(error => {
-  console.error("Erro ao iniciar painel:", error);
-  showError("Ocorreu um erro ao carregar a tua conta. Tenta novamente.");
+  console.error("Erro ao carregar painel:", error);
+
+  showError(
+    "Ocorreu um erro ao carregar a tua conta. Tenta novamente."
+  );
 });
 
 async function logout() {
-
   const button = document.getElementById("logoutBtn");
 
   button.disabled = true;
   button.textContent = "A terminar sessão...";
+
+  if (intervaloActualizacao) {
+    clearInterval(intervaloActualizacao);
+  }
 
   try {
     await supabaseClient.auth.signOut();
@@ -590,7 +607,7 @@ async function logout() {
 
   window.location.replace("cliente.html");
 }
-</script>
 
+</script>
 </body>
 </html>
