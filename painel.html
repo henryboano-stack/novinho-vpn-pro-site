@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -23,6 +22,12 @@ h2{font-size:21px;margin-bottom:8px}
 .info small{display:block;color:#8fa5bc;font-size:12px;margin-bottom:7px}
 .info strong{font-size:15px;overflow-wrap:anywhere}
 .status-active{color:#19d3a2}
+.status-pending{color:#f4c66a}
+.status-expired{color:#ff9aaa}
+.notice{padding:14px;border-radius:10px;font-size:13px;line-height:1.6;margin-bottom:15px}
+.notice-pending{background:#45391e;border:1px solid #80652d;color:#f8d990}
+.notice-active{background:#103c35;border:1px solid #1b755f;color:#9bf0d7}
+.notice-expired{background:#492532;border:1px solid #85364c;color:#ffb6c4}
 .loading{text-align:center;padding:25px 10px;color:#b9c8d8;font-size:14px}
 .spinner{width:35px;height:35px;border:4px solid #26394e;border-top-color:#19d3a2;border-radius:50%;margin:0 auto 18px;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -78,7 +83,7 @@ A verificar a tua conta...
 
 <div class="info">
 <small>Estado da conta</small>
-<strong id="accountStatus" class="status-active">---</strong>
+<strong id="accountStatus">---</strong>
 </div>
 
 <div class="info">
@@ -86,14 +91,14 @@ A verificar a tua conta...
 <strong id="expires">---</strong>
 </div>
 
+<div id="accountMessage" class="notice"></div>
+
 <button class="btn btn-logout" onclick="logout()" id="logoutBtn">
 TERMINAR SESSÃO
 </button>
 
 </div>
 </div>
-
-<!-- HISTÓRICO DE PAGAMENTOS -->
 
 <div class="card" id="paymentsCard">
 
@@ -109,8 +114,6 @@ A carregar os teus pedidos...
 <div id="paymentsList"></div>
 
 </div>
-
-<!-- ÁREA VPN -->
 
 <div class="card" id="vpnCard">
 
@@ -138,10 +141,7 @@ LIGAÇÃO EM PREPARAÇÃO
 <script>
 "use strict";
 
-// CONFIGURAÇÃO SUPABASE
-
 const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
-
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
 const supabaseClient = window.supabase.createClient(
@@ -174,7 +174,7 @@ function showError(message) {
 }
 
 function formatDate(value) {
-  if (!value) return "Não definida pelo administrador";
+  if (!value) return "Ainda não definida";
 
   const date = new Date(value);
 
@@ -217,8 +217,6 @@ function statusClass(status) {
   return "pending";
 }
 
-// HISTÓRICO DE PAGAMENTOS
-
 async function carregarPedidos(userId) {
 
   const paymentsLoading = document.getElementById("paymentsLoading");
@@ -244,7 +242,7 @@ async function carregarPedidos(userId) {
 
     if (!data || data.length === 0) {
       paymentsList.innerHTML =
-        '<p class="empty">Ainda não tens pedidos de pagamento registados.</p>';
+        '<p class="empty">Ainda não tens pedidos de pagamento registados. Escolhe um plano e envia o comprovativo para iniciar a análise.</p>';
       return;
     }
 
@@ -311,14 +309,10 @@ async function carregarPedidos(userId) {
   }
 }
 
-// CARREGAR CONTA
-
 async function loadDashboard() {
 
   if (carregamentoIniciado) return;
   carregamentoIniciado = true;
-
-  // IMPORTANTE: usar os nomes exactos do cliente.html
 
   const accessToken =
     sessionStorage.getItem("novinho_access_token");
@@ -343,8 +337,6 @@ async function loadDashboard() {
     showError("A tua sessão expirou. Volta à área do cliente e inicia sessão novamente.");
     return;
   }
-
-  // Guardar os tokens actualizados com os mesmos nomes
 
   sessionStorage.setItem(
     "novinho_access_token",
@@ -382,42 +374,85 @@ async function loadDashboard() {
     return;
   }
 
-  if (profile.status !== "active") {
-    showError("A tua conta encontra-se bloqueada ou inactiva.");
+  // Contas bloqueadas não podem entrar no painel.
+  if (profile.status === "blocked") {
+    showError("A tua conta encontra-se bloqueada. Contacta o administrador.");
     return;
   }
 
-  if (
-    profile.expires_at &&
-    new Date(profile.expires_at).getTime() <= Date.now()
-  ) {
-    showError("A validade da tua conta terminou. Contacta o administrador.");
+  // Verificar se o estado da conta é reconhecido.
+  if (!["pending", "active", "expired"].includes(profile.status)) {
+    showError("O estado da tua conta não é reconhecido. Contacta o administrador.");
     return;
+  }
+
+  // Verificar validade.
+  const validadeTerminou =
+    profile.expires_at &&
+    new Date(profile.expires_at).getTime() <= Date.now();
+
+  let estadoTexto = "";
+  let estadoClasse = "";
+  let mensagem = "";
+  let mensagemClasse = "";
+
+  if (profile.status === "pending") {
+
+    estadoTexto = "AGUARDANDO APROVAÇÃO";
+    estadoClasse = "status-pending";
+
+    mensagem =
+      "A tua conta foi criada com sucesso. O pagamento ainda está pendente de aprovação pelo administrador. Consulta a área Meus pagamentos para acompanhar o pedido.";
+
+    mensagemClasse = "notice-pending";
+
+  } else if (profile.status === "expired" || validadeTerminou) {
+
+    estadoTexto = "VALIDADE EXPIRADA";
+    estadoClasse = "status-expired";
+
+    mensagem =
+      "A validade da tua assinatura terminou. Contacta o administrador para renovar o serviço.";
+
+    mensagemClasse = "notice-expired";
+
+  } else {
+
+    estadoTexto = "ACTIVA";
+    estadoClasse = "status-active";
+
+    mensagem =
+      "A tua conta está activa. Consulta a validade e acompanha as informações do serviço.";
+
+    mensagemClasse = "notice-active";
+
   }
 
   document.getElementById("username").textContent = profile.username;
-  document.getElementById("accountStatus").textContent = "ACTIVA";
+
+  const accountStatus = document.getElementById("accountStatus");
+  accountStatus.textContent = estadoTexto;
+  accountStatus.className = estadoClasse;
+
   document.getElementById("expires").textContent =
     formatDate(profile.expires_at);
+
+  const accountMessage = document.getElementById("accountMessage");
+  accountMessage.textContent = mensagem;
+  accountMessage.className = "notice " + mensagemClasse;
 
   loading.style.display = "none";
   errorBox.style.display = "none";
   dashboard.style.display = "block";
   vpnCard.style.display = "block";
 
-  // Carregar histórico do cliente identificado
-
   await carregarPedidos(userData.user.id);
 }
 
-// INICIAR
-
 loadDashboard().catch(error => {
   console.error("Erro ao iniciar painel:", error);
-  showError(error.message || "Ocorreu um erro ao carregar a tua conta.");
+  showError("Ocorreu um erro ao carregar a tua conta. Tenta novamente.");
 });
-
-// TERMINAR SESSÃO
 
 async function logout() {
 
