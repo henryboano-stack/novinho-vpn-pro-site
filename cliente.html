@@ -1,161 +1,167 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#071426">
-  <title>Área do Cliente | NOVINHO VPN PRO</title>
+  <title>NOVINHO VPN PRO - Área do Cliente</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #071426;
-      color: white;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      background: linear-gradient(135deg, #071b32, #102f50);
+      color: white;
     }
 
     .container {
       width: 100%;
-      max-width: 420px;
-      background: #102239;
-      border: 1px solid #213b55;
-      border-radius: 18px;
+      max-width: 400px;
       padding: 30px 24px;
-      box-shadow: 0 15px 40px #0005;
+      border-radius: 18px;
+      background: #102b46;
+      box-shadow: 0 10px 35px rgba(0,0,0,.3);
     }
 
     .logo {
       text-align: center;
-      font-size: 23px;
-      font-weight: 900;
-      color: #19e68c;
+      font-size: 27px;
+      font-weight: bold;
+      color: #36d399;
       margin-bottom: 8px;
     }
 
-    .logo span { color: white; }
-
-    .subtitle, .description {
+    .subtitulo {
       text-align: center;
-      color: #9eb0c2;
-      font-size: 13px;
+      color: #c3d3e3;
+      margin-bottom: 28px;
+      font-size: 14px;
     }
-
-    .subtitle { margin-bottom: 30px; }
 
     h2 {
       text-align: center;
+      margin-bottom: 22px;
       font-size: 21px;
-      margin-bottom: 8px;
     }
 
-    .description { margin-bottom: 25px; }
+    .alternar-area {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .alternar {
+      flex: 1;
+      padding: 11px 5px;
+      margin: 0;
+      background: #071b32;
+      color: #c3d3e3;
+      border: 1px solid #42617e;
+      font-size: 13px;
+    }
+
+    .alternar.ativo {
+      background: #36d399;
+      color: #071b32;
+      border-color: #36d399;
+    }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: bold;
+      margin: 14px 0 7px;
+      font-size: 14px;
     }
 
     input {
       width: 100%;
       padding: 14px;
-      margin-bottom: 18px;
-      border: 1px solid #304963;
+      border: 1px solid #42617e;
       border-radius: 9px;
-      background: #071426;
+      outline: none;
+      background: #071b32;
       color: white;
       font-size: 15px;
-      outline: none;
     }
 
-    input:focus { border-color: #19e68c; }
+    input:focus {
+      border-color: #36d399;
+    }
 
-    .password-area { position: relative; }
+    input::placeholder {
+      color: #8da4ba;
+    }
 
-    .password-area input { padding-right: 75px; }
+    .senha-area {
+      position: relative;
+    }
 
-    .show-password {
+    .senha-area input {
+      padding-right: 75px;
+    }
+
+    .mostrar {
       position: absolute;
       right: 12px;
-      top: 13px;
-      color: #19e68c;
-      background: none;
-      border: none;
-      cursor: pointer;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #36d399;
       font-size: 12px;
+      cursor: pointer;
     }
 
-    .login-button {
+    .principal {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
+      margin-top: 22px;
       border: none;
       border-radius: 9px;
-      background: #19e68c;
-      color: #071426;
-      font-weight: bold;
+      background: #36d399;
+      color: #071b32;
       font-size: 15px;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    .login-button:disabled {
+    button:disabled {
       opacity: .6;
-      cursor: wait;
+      cursor: not-allowed;
     }
 
-    .message {
-      display: none;
-      padding: 12px;
-      margin-top: 18px;
-      border-radius: 8px;
+    #mensagem {
+      margin-top: 16px;
       text-align: center;
-      font-size: 13px;
-      overflow-wrap: anywhere;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-    .error {
-      display: block;
-      background: #481e28;
-      color: #ffb5bd;
-    }
-
-    .success {
-      display: block;
-      background: #123e31;
-      color: #8df5c1;
-    }
-
-    .support {
+    .rodape {
       text-align: center;
       margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid #294158;
+      color: #9eb3c8;
       font-size: 12px;
-      color: #9eb0c2;
     }
 
-    .support strong {
-      display: block;
-      color: white;
-      margin: 7px 0;
+    .ajuda {
+      margin-top: 8px;
+      color: #9eb3c8;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
-    .support a, .back {
-      color: #19e68c;
-      text-decoration: none;
-    }
-
-    .back {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      font-size: 13px;
+    [hidden] {
+      display: none !important;
     }
   </style>
 </head>
@@ -164,231 +170,340 @@
 
   <main class="container">
 
-    <div class="logo">
-      NOVINHO <span>VPN PRO</span>
-    </div>
-
-    <p class="subtitle">
-      TECNOLOGIA • CONECTIVIDADE • SEGURANÇA
-    </p>
+    <div class="logo">NOVINHO VPN PRO</div>
+    <p class="subtitulo">A tua ligação começa aqui.</p>
 
     <h2>Área do Cliente</h2>
 
-    <p class="description">
-      Introduz os teus dados para aceder à tua conta.
-    </p>
+    <div class="alternar-area">
+      <button type="button" class="alternar ativo" id="abaEntrar">
+        ENTRAR
+      </button>
 
-    <form id="loginForm">
+      <button type="button" class="alternar" id="abaRegistar">
+        CRIAR CONTA
+      </button>
+    </div>
 
-      <label for="username">Nome de utilizador</label>
+    <!-- FORMULÁRIO DE LOGIN -->
+    <form id="formLogin">
 
+      <label for="telefoneLogin">Número de telefone</label>
       <input
-        type="text"
-        id="username"
-        placeholder="Exemplo: cliente002"
-        autocomplete="username"
+        type="tel"
+        id="telefoneLogin"
+        placeholder="+244 9XXXXXXXX"
+        autocomplete="tel"
         required
       >
 
-      <label for="password">Palavra-passe</label>
+      <label for="senhaLogin">Palavra-passe</label>
 
-      <div class="password-area">
-
+      <div class="senha-area">
         <input
           type="password"
-          id="password"
-          placeholder="Introduz a tua palavra-passe"
+          id="senhaLogin"
+          placeholder="A tua palavra-passe"
           autocomplete="current-password"
           required
         >
-
-        <button
-          type="button"
-          class="show-password"
-          id="togglePassword"
-        >
-          Mostrar
-        </button>
-
+        <span class="mostrar" data-target="senhaLogin">Mostrar</span>
       </div>
 
-      <button
-        type="submit"
-        class="login-button"
-        id="loginButton"
-      >
+      <button type="submit" class="principal" id="botaoEntrar">
         ENTRAR NA MINHA CONTA
       </button>
 
-      <div id="message" class="message"></div>
+    </form>
+
+    <!-- FORMULÁRIO DE REGISTO -->
+    <form id="formRegisto" hidden>
+
+      <label for="nomeCompleto">Nome completo</label>
+      <input
+        type="text"
+        id="nomeCompleto"
+        placeholder="Introduz o teu nome completo"
+        autocomplete="name"
+        minlength="2"
+        required
+      >
+
+      <label for="telefoneRegisto">Número de telefone internacional</label>
+      <input
+        type="tel"
+        id="telefoneRegisto"
+        placeholder="+244 9XXXXXXXX"
+        autocomplete="tel"
+        required
+      >
+
+      <p class="ajuda">
+        Inclui o indicativo do teu país. Exemplo: +244 para Angola.
+      </p>
+
+      <label for="senhaRegisto">Criar palavra-passe</label>
+
+      <div class="senha-area">
+        <input
+          type="password"
+          id="senhaRegisto"
+          placeholder="Mínimo de 8 caracteres"
+          autocomplete="new-password"
+          minlength="8"
+          required
+        >
+        <span class="mostrar" data-target="senhaRegisto">Mostrar</span>
+      </div>
+
+      <button type="submit" class="principal" id="botaoRegistar">
+        CRIAR A MINHA CONTA
+      </button>
 
     </form>
 
-    <div class="support">
+    <p id="mensagem" role="status" aria-live="polite"></p>
 
-      Precisas de ajuda? Contacta o administrador.
-
-      <strong>ADM HENRY BOANO</strong>
-
-      <a href="https://wa.me/244938260411">
-        WhatsApp: +244 938 260 411
-      </a>
-
+    <div class="rodape">
+      NOVINHO VPN PRO © 2026
     </div>
-
-    <a class="back" href="./index.html">
-      ← Voltar ao site principal
-    </a>
 
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
+    const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
 
-    const SUPABASE_URL =
-      "https://yaawdvqonfxnyiedcddq.supabase.co";
-
-    const SUPABASE_PUBLISHABLE_KEY =
+    const SUPABASE_KEY =
       "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
-    const form = document.getElementById("loginForm");
-    const usernameInput = document.getElementById("username");
-    const passwordInput = document.getElementById("password");
-    const loginButton = document.getElementById("loginButton");
-    const message = document.getElementById("message");
-    const togglePassword = document.getElementById("togglePassword");
+    const clienteSupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-    function showMessage(text, type) {
-      message.textContent = text;
-      message.className = "message " + type;
+    const formLogin = document.getElementById("formLogin");
+    const formRegisto = document.getElementById("formRegisto");
+    const mensagem = document.getElementById("mensagem");
+
+    const abaEntrar = document.getElementById("abaEntrar");
+    const abaRegistar = document.getElementById("abaRegistar");
+
+    function mostrarMensagem(texto, cor) {
+      mensagem.textContent = texto;
+      mensagem.style.color = cor;
     }
 
-    togglePassword.addEventListener("click", function () {
+    function normalizarTelefone(valor) {
+      let telefone = valor.trim().replace(/[\s()-]/g, "");
 
-      const showing = passwordInput.type === "password";
-
-      passwordInput.type = showing ? "text" : "password";
-
-      togglePassword.textContent = showing ? "Ocultar" : "Mostrar";
-
-    });
-
-    form.addEventListener("submit", async function (event) {
-
-      event.preventDefault();
-
-      const username = usernameInput.value.trim().toLowerCase();
-      const password = passwordInput.value;
-
-      if (!username || !password) {
-        showMessage("Preenche todos os campos.", "error");
-        return;
+      if (telefone.startsWith("00")) {
+        telefone = "+" + telefone.slice(2);
       }
 
-      if (!window.supabase) {
-        showMessage(
-          "Erro ao carregar o serviço de autenticação. Verifica a internet.",
-          "error"
+      return telefone;
+    }
+
+    function guardarSessao(data, telefone) {
+      sessionStorage.setItem(
+        "novinho_access_token",
+        data.access_token
+      );
+
+      sessionStorage.setItem(
+        "novinho_refresh_token",
+        data.refresh_token
+      );
+
+      sessionStorage.setItem(
+        "novinho_username",
+        data.username || telefone
+      );
+    }
+
+    function mudarFormulario(tipo) {
+      const entrar = tipo === "entrar";
+
+      formLogin.hidden = !entrar;
+      formRegisto.hidden = entrar;
+
+      abaEntrar.classList.toggle("ativo", entrar);
+      abaRegistar.classList.toggle("ativo", !entrar);
+
+      mostrarMensagem("", "#ffffff");
+    }
+
+    abaEntrar.addEventListener("click", function () {
+      mudarFormulario("entrar");
+    });
+
+    abaRegistar.addEventListener("click", function () {
+      mudarFormulario("registar");
+    });
+
+    document.querySelectorAll(".mostrar").forEach(function (elemento) {
+      elemento.addEventListener("click", function () {
+        const campo = document.getElementById(this.dataset.target);
+
+        if (campo.type === "password") {
+          campo.type = "text";
+          this.textContent = "Ocultar";
+        } else {
+          campo.type = "password";
+          this.textContent = "Mostrar";
+        }
+      });
+    });
+
+    // LOGIN COM TELEFONE
+    formLogin.addEventListener("submit", async function (evento) {
+      evento.preventDefault();
+
+      const telefone = normalizarTelefone(
+        document.getElementById("telefoneLogin").value
+      );
+
+      const password = document.getElementById("senhaLogin").value;
+
+      const botao = document.getElementById("botaoEntrar");
+
+      if (!/^\+[1-9]\d{7,14}$/.test(telefone)) {
+        mostrarMensagem(
+          "Introduz o telefone com indicativo internacional, por exemplo +244.",
+          "#ff7777"
         );
         return;
       }
 
-      loginButton.disabled = true;
-      loginButton.textContent = "A VERIFICAR...";
+      botao.disabled = true;
+      botao.textContent = "A verificar...";
 
-      showMessage("A verificar os teus dados...", "success");
+      mostrarMensagem("A verificar os teus dados. Aguarda...", "#ffffff");
 
       try {
-
-        const supabaseClient = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_PUBLISHABLE_KEY,
-          {
-            auth: {
-              persistSession: false,
-              autoRefreshToken: false,
-              detectSessionInUrl: false
-            }
-          }
-        );
-
         const { data, error } =
-          await supabaseClient.functions.invoke(
-            "login-cliente",
-            {
-              body: {
-                username: username,
-                password: password
-              }
+          await clienteSupabase.functions.invoke("login-cliente", {
+            body: {
+              phone: telefone,
+              password: password
             }
-          );
+          });
 
-        if (error) {
-          console.error("Erro Supabase:", error);
+        if (error) throw error;
 
+        if (
+          !data ||
+          data.success !== true ||
+          !data.access_token ||
+          !data.refresh_token
+        ) {
           throw new Error(
-            "Falha na comunicação com o servidor: " + error.message
+            data?.message || "Telefone ou palavra-passe incorrectos."
           );
         }
 
-        if (!data || !data.success) {
-          throw new Error(
-            data?.error || "Não foi possível iniciar sessão."
-          );
-        }
+        guardarSessao(data, telefone);
 
-        if (!data.access_token || !data.refresh_token) {
-          throw new Error(
-            "O servidor não devolveu os dados da sessão."
-          );
-        }
+        mostrarMensagem("Entrada efectuada com sucesso!", "#36d399");
 
-        // GUARDAR A SESSÃO COM OS NOMES ESPERADOS PELO PAINEL
+        window.location.href = "planos.html";
 
-        sessionStorage.setItem(
-          "novinho_access_token",
-          data.access_token
+      } catch (erro) {
+        console.error("Erro no login:", erro);
+
+        mostrarMensagem(
+          erro.message || "Não foi possível entrar. Tenta novamente.",
+          "#ff7777"
         );
 
-        sessionStorage.setItem(
-          "novinho_refresh_token",
-          data.refresh_token
-        );
-
-        sessionStorage.setItem(
-          "novinho_username",
-          data.username || username
-        );
-
-        showMessage(
-          "LOGIN REALIZADO COM SUCESSO! A entrar...",
-          "success"
-        );
-
-        loginButton.textContent = "LOGIN CONFIRMADO";
-
-        setTimeout(function () {
-          window.location.href = "./painel.html";
-        }, 1000);
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-          error.message || "Ocorreu um erro. Tenta novamente.",
-          "error"
-        );
-
-        loginButton.disabled = false;
-
-        loginButton.textContent = "ENTRAR NA MINHA CONTA";
-
+        botao.disabled = false;
+        botao.textContent = "ENTRAR NA MINHA CONTA";
       }
-
     });
 
+    // REGISTO DE NOVO CLIENTE
+    formRegisto.addEventListener("submit", async function (evento) {
+      evento.preventDefault();
+
+      const nome = document.getElementById("nomeCompleto").value.trim();
+
+      const telefone = normalizarTelefone(
+        document.getElementById("telefoneRegisto").value
+      );
+
+      const password = document.getElementById("senhaRegisto").value;
+
+      const botao = document.getElementById("botaoRegistar");
+
+      if (nome.length < 2) {
+        mostrarMensagem("Introduz o teu nome completo.", "#ff7777");
+        return;
+      }
+
+      if (!/^\+[1-9]\d{7,14}$/.test(telefone)) {
+        mostrarMensagem(
+          "Telefone inválido. Usa o indicativo internacional, por exemplo +244.",
+          "#ff7777"
+        );
+        return;
+      }
+
+      if (password.length < 8) {
+        mostrarMensagem(
+          "A palavra-passe deve ter pelo menos 8 caracteres.",
+          "#ff7777"
+        );
+        return;
+      }
+
+      botao.disabled = true;
+      botao.textContent = "A CRIAR CONTA...";
+
+      mostrarMensagem("A criar a tua conta. Aguarda...", "#ffffff");
+
+      try {
+        const { data, error } =
+          await clienteSupabase.functions.invoke("registar-cliente", {
+            body: {
+              full_name: nome,
+              phone: telefone,
+              password: password
+            }
+          });
+
+        if (error) throw error;
+
+        if (
+          !data ||
+          data.success !== true ||
+          !data.access_token ||
+          !data.refresh_token
+        ) {
+          throw new Error(
+            data?.message || "Não foi possível criar a conta."
+          );
+        }
+
+        guardarSessao(data, telefone);
+
+        mostrarMensagem(
+          "Conta criada com sucesso! A entrar...",
+          "#36d399"
+        );
+
+        window.location.href = "planos.html";
+
+      } catch (erro) {
+        console.error("Erro no registo:", erro);
+
+        mostrarMensagem(
+          erro.message || "Não foi possível criar a conta. Tenta novamente.",
+          "#ff7777"
+        );
+
+        botao.disabled = false;
+        botao.textContent = "CRIAR A MINHA CONTA";
+      }
+    });
   </script>
 
 </body>
