@@ -8,768 +8,511 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:16px;background:#07111f;color:#fff;font-family:Arial,sans-serif}
-.container{max-width:950px;margin:22px auto}
-.header{text-align:center;margin-bottom:24px}
-.header h1{color:#19d3a2}
-.header p{color:#91a4b9;font-size:12px;letter-spacing:2px}
-.card{background:#101e30;border:1px solid #26394e;padding:18px;border-radius:14px;margin-bottom:16px}
-h2{color:#19d3a2;font-size:19px}
-.subtitle{color:#9caec2;font-size:13px;line-height:1.5}
-input,select,textarea{
-width:100%;padding:13px;margin-top:10px;border-radius:8px;
-border:1px solid #344761;background:#091525;color:#fff;font-size:15px
+body{
+ margin:0;background:#07111f;color:#fff;
+ font-family:Arial,sans-serif;padding:18px
 }
-textarea{min-height:65px;resize:vertical}
-button{padding:12px;border:0;border-radius:8px;background:#19d3a2;color:#06131d;font-weight:bold;cursor:pointer;margin-top:10px}
-button:disabled{opacity:.5;cursor:not-allowed}
-.full{width:100%}
-.logout,.danger{background:#d94b60;color:#fff}
-.secondary{background:#304761;color:#fff}
+.container{max-width:1000px;margin:auto}
+header{text-align:center;padding:20px 0}
+h1{color:#35d0ff;font-size:25px;margin:5px}
+.subtitle{color:#aab8ca;font-size:13px}
+.card{
+ background:#101e30;border:1px solid #263a52;
+ border-radius:14px;padding:18px;margin:15px 0
+}
+h2{font-size:18px;color:#35d0ff;margin-top:0}
+input,select,button{
+ width:100%;padding:13px;margin:7px 0;
+ border-radius:8px;border:1px solid #344b66;
+ font-size:15px
+}
+input,select{background:#07111f;color:#fff}
+button{
+ background:#087eae;color:white;font-weight:bold;
+ border:0;cursor:pointer
+}
+button.secondary{background:#344b66}
+button.danger{background:#b52b3a}
+button.success{background:#16834a}
+button.small{width:auto;padding:9px 12px;font-size:12px}
 .hidden{display:none!important}
-#result{margin-top:15px;padding:12px;border-radius:8px;background:#091525;color:#c5d3e1;font-size:13px;overflow-wrap:anywhere}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}
-.stat{background:#091525;padding:13px 8px;border-radius:9px;text-align:center}
-.stat strong{display:block;color:#19d3a2;font-size:23px}
-.stat span{font-size:10px;color:#9caec2}
-.item{background:#091525;border:1px solid #26394e;border-radius:10px;padding:14px;margin-top:12px;overflow-wrap:anywhere}
-.item strong{color:#19d3a2;font-size:15px}
-.item p{font-size:13px;color:#bdcbd9;margin:7px 0}
-.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}
-.actions button{margin:0;font-size:12px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.tabs button{margin:0;background:#304761;color:#fff}
-.tabs button.selected{background:#19d3a2;color:#06131d}
-.badge{display:inline-block;padding:5px 8px;border-radius:5px;font-size:11px;font-weight:bold;background:#304761;color:#fff}
-.pending{background:#8a641d;color:#fff0b3}
-.approved,.active{background:#176c50;color:#b8ffe5}
-.rejected,.blocked{background:#782d3d;color:#ffd5dd}
-.footer{text-align:center;color:#71859b;font-size:11px;margin-top:25px}
-a{color:#19d3a2;overflow-wrap:anywhere}
-hr{border:0;border-top:1px solid #26394e;margin:15px 0}
-@media(max-width:550px){
-.stats{grid-template-columns:1fr 1fr}
-.actions{grid-template-columns:1fr 1fr}
+.message{
+ padding:12px;border-radius:8px;background:#1b3048;
+ color:#dceeff;margin:10px 0;overflow-wrap:anywhere
 }
+.item{
+ background:#0a1727;border:1px solid #263a52;
+ padding:14px;border-radius:10px;margin:10px 0;
+ overflow-wrap:anywhere
+}
+.item p{font-size:13px;color:#c3d0df;margin:7px 0}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions button{flex:1;min-width:100px}
+.badge{font-size:12px;color:#35d0ff}
+.topbar{display:flex;gap:8px;flex-wrap:wrap}
+.topbar button{flex:1;min-width:120px}
+footer{text-align:center;color:#8293a8;font-size:12px;padding:25px}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<div class="header">
+<header>
 <h1>NOVINHO VPN PRO</h1>
-<p>PAINEL ADMINISTRATIVO</p>
-</div>
+<div class="subtitle">PAINEL ADMINISTRATIVO</div>
+</header>
 
-<div class="card" id="loginArea">
+<section id="loginBox" class="card">
 <h2>Entrar como administrador</h2>
 <p class="subtitle">Acesso exclusivo à administração da plataforma.</p>
 
 <form id="loginForm">
-<input id="email" type="email" placeholder="Email administrativo" autocomplete="username" required>
-
-<input id="password" type="password" placeholder="Palavra-passe administrativa" autocomplete="current-password" required>
-
-<button class="full" id="loginBtn" type="submit">ENTRAR</button>
+<input id="email" type="email" placeholder="Email administrativo" required>
+<input id="password" type="password" placeholder="Palavra-passe administrativa" required>
+<button type="submit" id="loginBtn">ENTRAR</button>
 </form>
-</div>
+<div id="loginMessage" class="message">Aguardando autenticação.</div>
+</section>
 
-<div id="dashboard" class="hidden">
-
-<div class="stats">
-<div class="stat"><strong id="total">0</strong><span>CLIENTES</span></div>
-<div class="stat"><strong id="active">0</strong><span>ACTIVOS</span></div>
-<div class="stat"><strong id="pending">0</strong><span>PENDENTES</span></div>
-<div class="stat"><strong id="blocked">0</strong><span>BLOQUEADOS</span></div>
-</div>
-
-<div class="tabs">
-<button type="button" class="selected" id="clientsTab">CLIENTES</button>
-<button type="button" id="paymentsTab">PAGAMENTOS</button>
-</div>
-
-<section id="clientsArea">
+<section id="dashboard" class="hidden">
 
 <div class="card">
-<h2>Criar novo cliente</h2>
-<p class="subtitle">Cria uma conta com nome, telefone internacional e palavra-passe.</p>
-
-<input id="fullName" placeholder="Nome completo" maxlength="120">
-
-<input id="phone" type="tel" placeholder="Telefone com indicativo, ex.: +244923000000">
-
-<input id="clientPassword" type="password" placeholder="Palavra-passe (mínimo 8 caracteres)">
-
-<select id="days">
-<option value="7">7 dias</option>
-<option value="15">15 dias</option>
-<option value="30" selected>30 dias</option>
-<option value="60">60 dias</option>
-<option value="120">120 dias</option>
-</select>
-
-<button type="button" class="full" id="createBtn">CRIAR CLIENTE</button>
+<div class="topbar">
+<button onclick="loadClients()">CLIENTES</button>
+<button onclick="loadPayments()">PAGAMENTOS</button>
+<button class="danger" onclick="logout()">TERMINAR SESSÃO</button>
+</div>
+<div id="mainMessage" class="message">Painel administrativo.</div>
 </div>
 
-<div class="card">
+<div id="clientsSection" class="card hidden">
 <h2>Gestão de clientes</h2>
-<input id="search" placeholder="Pesquisar por nome ou telefone">
-<button type="button" class="full secondary" id="refreshClients">ACTUALIZAR CLIENTES</button>
-<div id="clientList"><p class="subtitle">A carregar clientes...</p></div>
+<p class="subtitle">Clientes registados na plataforma.</p>
+<div id="clientsList">A carregar...</div>
+</div>
+
+<div id="paymentsSection" class="card hidden">
+<h2>Gestão de pagamentos</h2>
+<p class="subtitle">Consultar, aprovar ou rejeitar pagamentos.</p>
+<div id="paymentsList">A carregar...</div>
 </div>
 
 </section>
 
-<section id="paymentsArea" class="hidden">
-<div class="card">
-<h2>Pedidos de pagamento</h2>
-<p class="subtitle">Consulta os comprovativos e decide se o pagamento deve ser aprovado ou rejeitado.</p>
-
-<select id="paymentFilter">
-<option value="pending">Pendentes</option>
-<option value="approved">Aprovados</option>
-<option value="rejected">Rejeitados</option>
-<option value="all">Todos</option>
-</select>
-
-<button type="button" class="full secondary" id="refreshPayments">ACTUALIZAR PAGAMENTOS</button>
-
-<div id="paymentList"><p class="subtitle">A carregar pagamentos...</p></div>
-</div>
-</section>
-
-<button type="button" class="full logout" id="logoutBtn">TERMINAR SESSÃO</button>
-</div>
-
-<div id="result" role="status" aria-live="polite">Painel preparado.</div>
-
-<div class="footer">
+<footer>
 © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
-</div>
-
+</footer>
 </div>
 
 <script>
-"use strict";
+const SUPABASE_URL =
+"https://yaawdvqonfxnyiedcddq.supabase.co";
 
-const SUPABASE_URL = "https://yaawdvqonfxnyiedcddq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+const SUPABASE_KEY =
+"sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
-let accessToken = null;
-let clients = [];
-let payments = [];
+const FUNCTION_URL =
+SUPABASE_URL + "/functions/v1/gestao-clientes";
+
+let accessToken = "";
+let currentUser = null;
 
 const $ = id => document.getElementById(id);
 
-function message(text, success=false) {
-  $("result").textContent = text;
-  $("result").style.color = success ? "#19d3a2" : "#ffb6c4";
+function showMessage(id, message){
+ $(id).textContent = message;
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
-  })[char]);
+async function readResponse(response){
+ const text = await response.text();
+ let data = {};
+
+ try{
+  data = text ? JSON.parse(text) : {};
+ }catch{
+  data = {message:text};
+ }
+
+ if(!response.ok){
+  throw new Error(
+   data.error || data.message || "Ocorreu um erro no servidor."
+  );
+ }
+
+ return data;
 }
 
-async function readResponse(response) {
-  const raw = await response.text();
-  let data = {};
+async function management(action, parameters = {}){
+ if(!accessToken){
+  throw new Error("A sessão terminou. Entre novamente.");
+ }
 
-  try {
-    data = raw ? JSON.parse(raw) : {};
-  } catch {
-    throw new Error("Resposta inválida do servidor.");
-  }
+ const response = await fetch(FUNCTION_URL,{
+  method:"POST",
+  headers:{
+   "Content-Type":"application/json",
+   "apikey":SUPABASE_KEY,
+   "Authorization":"Bearer " + accessToken
+  },
+  body:JSON.stringify({
+   action,
+   ...parameters
+  })
+ });
 
-  if (!response.ok) {
-    throw new Error(
-      data.error_description ||
-      data.error ||
-      data.message ||
-      "Erro HTTP " + response.status
-    );
-  }
-
-  return data;
+ return await readResponse(response);
 }
 
-function normalizePhone(value) {
-  let phone = String(value || "").trim().replace(/[\s()-]/g, "");
+/* LOGIN ADMINISTRATIVO */
 
-  if (phone.startsWith("00")) {
-    phone = "+" + phone.slice(2);
-  }
+$("loginForm").addEventListener("submit", async event=>{
+ event.preventDefault();
 
-  if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
-    throw new Error("Telefone inválido. Usa o indicativo internacional, por exemplo +244.");
-  }
+ const email = $("email").value.trim();
+ const password = $("password").value;
 
-  return phone;
-}
+ $("loginBtn").disabled = true;
+ showMessage("loginMessage","A verificar os dados de acesso...");
 
-function formatDate(value) {
-  if (!value) return "Não definida";
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Data inválida";
-  }
-
-  return date.toLocaleString("pt-PT", {
-    dateStyle:"short",
-    timeStyle:"short",
-    timeZone:"Africa/Luanda"
-  });
-}
-
-function statusLabel(status) {
-  const labels = {
-    active:"ACTIVO",
-    pending:"PENDENTE",
-    blocked:"BLOQUEADO",
-    expired:"EXPIRADO",
-    approved:"APROVADO",
-    rejected:"REJEITADO"
-  };
-
-  return labels[status] || status;
-}
-
-function badge(status) {
-  const allowed = [
-    "active",
-    "pending",
-    "blocked",
-    "expired",
-    "approved",
-    "rejected"
-  ];
-
-  const safeStatus = allowed.includes(status) ? status : "";
-
-  return `<span class="badge ${safeStatus}">${escapeHTML(statusLabel(status))}</span>`;
-}
-
-// LOGIN ADMINISTRATIVO
-$("loginForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const email = $("email").value.trim();
-  const password = $("password").value;
-  const button = $("loginBtn");
-
-  button.disabled = true;
-  message("A verificar credenciais...");
-
-  try {
-    const response = await fetch(
-      SUPABASE_URL + "/auth/v1/token?grant_type=password",
-      {
-        method:"POST",
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({email, password})
-      }
-    );
-
-    const data = await readResponse(response);
-
-    if (!data.access_token || !data.user) {
-      throw new Error("Sessão não recebida.");
-    }
-
-    const profileResponse = await fetch(
-      SUPABASE_URL + "/rest/v1/user_profiles?select=id,role,status&id=eq." + encodeURIComponent(data.user.id),
-      {
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer " + data.access_token
-        }
-      }
-    );
-
-    const profiles = await readResponse(profileResponse);
-    const profile = Array.isArray(profiles) ? profiles[0] : null;
-
-    if (!profile || profile.role !== "admin" || profile.status !== "active") {
-      throw new Error("Acesso exclusivo ao administrador. Verifica o perfil e as permissões.");
-    }
-
-    accessToken = data.access_token;
-
-    $("loginArea").classList.add("hidden");
-    $("dashboard").classList.remove("hidden");
-    $("password").value = "";
-
-    message("Bem-vindo, administrador!", true);
-
-    await loadClients();
-    await loadPayments();
-
-  } catch(error) {
-    accessToken = null;
-    message("ERRO NO LOGIN: " + error.message);
-
-  } finally {
-    button.disabled = false;
-  }
-});
-
-// COMUNICAÇÃO COM A EDGE FUNCTION
-async function management(action, extra={}) {
-  if (!accessToken) {
-    throw new Error("Sessão administrativa terminada. Entra novamente.");
-  }
-
+ try{
   const response = await fetch(
-    SUPABASE_URL + "/functions/v1/gestao-clientes",
-    {
-      method:"POST",
-      headers:{
-        "apikey":SUPABASE_KEY,
-        "Authorization":"Bearer " + accessToken,
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({action, ...extra})
-    }
+   SUPABASE_URL + "/auth/v1/token?grant_type=password",
+   {
+    method:"POST",
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Content-Type":"application/json"
+    },
+    body:JSON.stringify({email,password})
+   }
   );
 
-  return await readResponse(response);
-}// CRIAR CLIENTE
-$("createBtn").addEventListener("click", async () => {
-  const full_name = $("fullName").value.trim();
-  const password = $("clientPassword").value;
-  const days = Number($("days").value);
-  let phone;
+  const data = await readResponse(response);
 
-  try {
-    phone = normalizePhone($("phone").value);
+  if(!data.access_token || !data.user){
+   throw new Error("Não foi possível iniciar a sessão.");
+  }
 
-    if (full_name.length < 2 || full_name.length > 120) {
-      throw new Error("Introduz um nome completo válido.");
+  accessToken = data.access_token;
+  currentUser = data.user;
+
+  const profileResponse = await fetch(
+   SUPABASE_URL +
+   "/rest/v1/user_profiles?select=id,role,status&id=eq." +
+   encodeURIComponent(data.user.id),
+   {
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Authorization":"Bearer " + accessToken
     }
-
-    if (password.length < 8 || password.length > 72) {
-      throw new Error("A palavra-passe deve ter entre 8 e 72 caracteres.");
-    }
-  } catch(error) {
-    message(error.message);
-    return;
-  }
-
-  const button = $("createBtn");
-  button.disabled = true;
-  button.textContent = "A CRIAR...";
-
-  try {
-    const data = await management("create", {
-      full_name,
-      phone,
-      password,
-      days
-    });
-
-    message("Cliente criado com sucesso: " + (data.phone || phone), true);
-
-    $("fullName").value = "";
-    $("phone").value = "";
-    $("clientPassword").value = "";
-
-    await loadClients();
-  } catch(error) {
-    message("ERRO AO CRIAR: " + error.message);
-  } finally {
-    button.disabled = false;
-    button.textContent = "CRIAR CLIENTE";
-  }
-});
-
-// LISTAR CLIENTES
-async function loadClients() {
-  $("clientList").innerHTML =
-    "<p class='subtitle'>A carregar clientes...</p>";
-
-  try {
-    const data = await management("list");
-    clients = data.clients || [];
-
-    renderClients();
-    updateStats();
-  } catch(error) {
-    $("clientList").textContent = "Erro: " + error.message;
-    message("Erro ao carregar clientes: " + error.message);
-  }
-}
-
-function updateStats() {
-  $("total").textContent = clients.length;
-
-  $("active").textContent =
-    clients.filter(c => c.status === "active").length;
-
-  $("pending").textContent =
-    clients.filter(c => c.status === "pending").length;
-
-  $("blocked").textContent =
-    clients.filter(c => c.status === "blocked").length;
-}
-
-// MOSTRAR CLIENTES
-function renderClients() {
-  const query = $("search").value.trim().toLowerCase();
-
-  const filtered = clients.filter(c =>
-    String(c.full_name || "").toLowerCase().includes(query) ||
-    String(c.phone_e164 || "").toLowerCase().includes(query) ||
-    String(c.username || "").toLowerCase().includes(query)
+   }
   );
 
-  if (!filtered.length) {
-    $("clientList").innerHTML =
-      "<p class='subtitle'>Nenhum cliente encontrado.</p>";
-    return;
+  const profiles = await readResponse(profileResponse);
+  const profile = profiles[0];
+
+  if(!profile ||
+     profile.role !== "admin" ||
+     profile.status !== "active"){
+   throw new Error("Acesso exclusivo ao administrador.");
   }
 
-  $("clientList").innerHTML = filtered.map(client => {
-    const id = escapeHTML(client.id);
-    const name = escapeHTML(client.full_name || "Nome não informado");
-    const phone = escapeHTML(
-      client.phone_e164 || client.username || "Sem telefone"
-    );
-    const status = client.status || "pending";
+  $("loginBox").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
 
-    return `
-      <div class="item">
-        <strong>${name}</strong>
-        <p>Telefone: ${phone}</p>
-        <p>Estado: ${badge(status)}</p>
-        <p>Validade: ${escapeHTML(formatDate(client.expires_at))}</p>
-        <p>Registado: ${escapeHTML(formatDate(client.created_at))}</p>
+  showMessage("mainMessage","Sessão administrativa iniciada.");
+  await loadClients();
 
-        <select class="renew-days">
-          <option value="7">Renovar 7 dias</option>
-          <option value="15">Renovar 15 dias</option>
-          <option value="30" selected>Renovar 30 dias</option>
-          <option value="60">Renovar 60 dias</option>
-          <option value="120">Renovar 120 dias</option>
-        </select>
-
-        <div class="actions">
-          <button type="button" data-action="renew" data-id="${id}">
-            RENOVAR
-          </button>
-
-          <button type="button" class="secondary"
-            data-action="toggle" data-id="${id}">
-            ${status === "blocked" ? "REACTIVAR" : "BLOQUEAR"}
-          </button>
-
-          <button type="button" class="secondary"
-            data-action="reset" data-id="${id}">
-            ALTERAR SENHA
-          </button>
-        </div>
-      </div>`;
-  }).join("");
-}
-
-// ACÇÕES DOS CLIENTES
-$("clientList").addEventListener("click", async event => {
-  const button = event.target.closest("button[data-action]");
-  if (!button) return;
-
-  const id = button.dataset.id;
-  const action = button.dataset.action;
-
-  const client = clients.find(c => String(c.id) === String(id));
-
-  if (!client) {
-    message("Cliente não encontrado.");
-    return;
-  }
-
-  const extra = {user_id:id};
-
-  try {
-    button.disabled = true;
-
-    if (action === "renew") {
-      const days = Number(
-        button.closest(".item").querySelector(".renew-days").value
-      );
-
-      await management("renew", {...extra, days});
-      message("Assinatura renovada com sucesso.", true);
-    }
-
-    if (action === "toggle") {
-      const status =
-        client.status === "blocked" ? "active" : "blocked";
-
-      const confirmText = status === "blocked"
-        ? "Tens a certeza de que queres bloquear esta conta?"
-        : "Queres reactivar esta conta?";
-
-      if (!confirm(confirmText)) return;
-
-      await management("set_status", {...extra, status});
-      message("Estado da conta actualizado.", true);
-    }
-
-    if (action === "reset") {
-      const newPassword = prompt(
-        "Introduz a nova palavra-passe (mínimo 8 caracteres):"
-      );
-
-      if (newPassword === null) return;
-
-      if (newPassword.length < 8 || newPassword.length > 72) {
-        throw new Error(
-          "A palavra-passe deve ter entre 8 e 72 caracteres."
-        );
-      }
-
-      if (!confirm(
-        "Confirmas a alteração da palavra-passe deste cliente?"
-      )) return;
-
-      await management("reset_password", {
-        ...extra,
-        password:newPassword
-      });
-
-      message("Palavra-passe alterada com sucesso.", true);
-    }
-
-    await loadClients();
-  } catch(error) {
-    message("ERRO: " + error.message);
-  } finally {
-    button.disabled = false;
-  }
+ }catch(error){
+  accessToken = "";
+  currentUser = null;
+  showMessage("loginMessage","ERRO: " + error.message);
+ }finally{
+  $("loginBtn").disabled = false;
+ }
 });
 
-$("search").addEventListener("input", renderClients);
-$("refreshClients").addEventListener("click", loadClients);
+/* CLIENTES */
 
-// SEPARAR ÁREAS
-function showArea(area) {
-  const clientsSelected = area === "clients";
+async function loadClients(){
+ $("paymentsSection").classList.add("hidden");
+ $("clientsSection").classList.remove("hidden");
+ $("clientsList").textContent = "A carregar clientes...";
 
-  $("clientsArea").classList.toggle("hidden", !clientsSelected);
-  $("paymentsArea").classList.toggle("hidden", clientsSelected);
+ try{
+  const data = await management("list");
+  const clients = data.clients || [];
 
-  $("clientsTab").classList.toggle("selected", clientsSelected);
-  $("paymentsTab").classList.toggle("selected", !clientsSelected);
+  if(!clients.length){
+   $("clientsList").textContent =
+    "Não existem clientes para apresentar.";
+   return;
+  }
+
+  $("clientsList").innerHTML = "";
+
+  clients.forEach(client=>{
+   const id = client.id || client.user_id || "";
+   const name = client.full_name || client.name || "Cliente";
+   const phone = client.phone || client.username || "Não informado";
+   const status = client.status || "Não informado";
+   const expiry = client.expires_at || "Não definida";
+   const created = client.created_at || "Não informado";
+
+   const item = document.createElement("div");
+   item.className = "item";
+
+   item.innerHTML = `
+    <strong>${safe(name)}</strong>
+    <p>Telefone: ${safe(phone)}</p>
+    <p>Estado: ${safe(status)}</p>
+    <p>Validade: ${safe(expiry)}</p>
+    <p>Registado em: ${safe(created)}</p>
+    <div class="actions">
+     <button class="small success" data-action="renew">RENOVAR</button>
+     <button class="small secondary" data-action="status">BLOQUEAR / ACTIVAR</button>
+     <button class="small" data-action="reset">REDEFINIR SENHA</button>
+    </div>
+   `;
+
+   item.querySelector('[data-action="renew"]')
+    .onclick = ()=>renewClient(id);
+
+   item.querySelector('[data-action="status"]')
+    .onclick = ()=>changeStatus(id,status);
+
+   item.querySelector('[data-action="reset"]')
+    .onclick = ()=>resetPassword(id);
+
+   $("clientsList").appendChild(item);
+  });
+
+ }catch(error){
+  $("clientsList").textContent =
+   "Erro ao carregar clientes: " + error.message;
+ }
 }
 
-$("clientsTab").addEventListener("click", () => {
-  showArea("clients");
-});
+async function renewClient(userId){
+ if(!userId){
+  alert("Não foi possível identificar este cliente.");
+  return;
+ }
 
-$("paymentsTab").addEventListener("click", async () => {
-  showArea("payments");
+ const days = prompt("Quantos dias pretende adicionar? (7, 15, 30, 90 ou 120)");
+
+ if(!["7","15","30","90","120"].includes(days)) return;
+
+ try{
+  const data = await management("renew",{
+   user_id:userId,
+   days:Number(days)
+  });
+
+  alert(data.message || "Pedido de renovação processado.");
+  await loadClients();
+
+ }catch(error){
+  alert("Erro: " + error.message);
+ }
+}
+
+async function changeStatus(userId,currentStatus){
+ if(!userId){
+  alert("Não foi possível identificar este cliente.");
+  return;
+ }
+
+ const newStatus =
+  String(currentStatus).toLowerCase() === "active"
+   ? "blocked"
+   : "active";
+
+ if(!confirm("Deseja alterar o estado para " + newStatus + "?")) return;
+
+ try{
+  const data = await management("set_status",{
+   user_id:userId,
+   status:newStatus
+  });
+
+  alert(data.message || "Estado actualizado.");
+  await loadClients();
+
+ }catch(error){
+  alert("Erro: " + error.message);
+ }
+}
+
+async function resetPassword(userId){
+ if(!userId){
+  alert("Não foi possível identificar este cliente.");
+  return;
+ }
+
+ const newPassword = prompt("Introduza a nova palavra-passe (mínimo 8 caracteres):");
+
+ if(!newPassword) return;
+
+ if(newPassword.length < 8){
+  alert("A palavra-passe deve ter pelo menos 8 caracteres.");
+  return;
+ }
+
+ try{
+  const data = await management("reset_password",{
+   user_id:userId,
+   password:newPassword
+  });
+
+  alert(data.message || "Palavra-passe redefinida.");
+
+ }catch(error){
+  alert("Erro: " + error.message);
+ }
+}
+
+/* PAGAMENTOS */
+
+async function loadPayments(){
+ $("clientsSection").classList.add("hidden");
+ $("paymentsSection").classList.remove("hidden");
+ $("paymentsList").textContent = "A carregar pagamentos...";
+
+ try{
+  const data = await management("list_payments");
+  const payments = data.payments || [];
+
+  if(!payments.length){
+   $("paymentsList").textContent =
+    "Não existem pagamentos para apresentar.";
+   return;
+  }
+
+  $("paymentsList").innerHTML = "";
+
+  payments.forEach(payment=>{
+   const id = payment.id || payment.payment_id || "";
+   const status = payment.status || "Não informado";
+
+   const item = document.createElement("div");
+   item.className = "item";
+
+   item.innerHTML = `
+    <strong>Pagamento</strong>
+    <p>Cliente: ${safe(payment.user_id || "Não informado")}</p>
+    <p>Plano: ${safe(payment.plan_days || "Não informado")} dias</p>
+    <p>Valor: ${safe(payment.amount_kz || "Não informado")} Kz</p>
+    <p>Estado: ${safe(status)}</p>
+    <p>Data: ${safe(payment.created_at || "Não informada")}</p>
+    <div class="actions">
+     <button class="small" data-action="proof">VER COMPROVATIVO</button>
+     <button class="small success" data-action="approve">APROVAR</button>
+     <button class="small danger" data-action="reject">REJEITAR</button>
+    </div>
+   `;
+
+   item.querySelector('[data-action="proof"]')
+    .onclick = ()=>viewProof(id);
+
+   item.querySelector('[data-action="approve"]')
+    .onclick = ()=>reviewPayment(id,true);
+
+   item.querySelector('[data-action="reject"]')
+    .onclick = ()=>reviewPayment(id,false);
+
+   $("paymentsList").appendChild(item);
+  });
+
+ }catch(error){
+  $("paymentsList").textContent =
+   "Erro ao carregar pagamentos: " + error.message;
+ }
+}
+
+async function viewProof(paymentId){
+ try{
+  const data = await management("proof_url",{
+   payment_id:paymentId
+  });
+
+  const url = data.url || data.signedUrl || data.signed_url;
+
+  if(!url){
+   throw new Error("A função não devolveu um endereço do comprovativo.");
+  }
+
+  window.open(url,"_blank");
+
+ }catch(error){
+  alert("Não foi possível abrir o comprovativo: " + error.message);
+ }
+}
+
+async function reviewPayment(paymentId,approve){
+ if(!paymentId){
+  alert("Pagamento não identificado.");
+  return;
+ }
+
+ const note = prompt(
+  approve
+   ? "Observação da aprovação (opcional):"
+   : "Motivo da rejeição:"
+ );
+
+ if(note === null) return;
+
+ if(!approve && !note.trim()){
+  alert("Indique o motivo da rejeição.");
+  return;
+ }
+
+ if(!confirm(approve
+  ? "Confirmar aprovação deste pagamento?"
+  : "Confirmar rejeição deste pagamento?")) return;
+
+ try{
+  const action = approve
+   ? "approve_payment"
+   : "reject_payment";
+
+  const data = await management(action,{
+   payment_id:paymentId,
+   admin_note:note
+  });
+
+  alert(data.message || "Operação concluída.");
   await loadPayments();
-});// LISTAR PAGAMENTOS
-async function loadPayments() {
-  $("paymentList").innerHTML =
-    "<p class='subtitle'>A carregar pagamentos...</p>";
 
-  try {
-    const data = await management("list_payments");
-    payments = data.payments || [];
-    renderPayments();
-  } catch(error) {
-    $("paymentList").textContent = "Erro: " + error.message;
-    message("Erro ao carregar pagamentos: " + error.message);
-  }
+ }catch(error){
+  alert("Erro: " + error.message);
+ }
 }
 
-// MOSTRAR PAGAMENTOS
-function renderPayments() {
-  const filter = $("paymentFilter").value;
+/* SEGURANÇA E APOIO */
 
-  const filtered = payments.filter(payment =>
-    filter === "all" || payment.status === filter
-  );
-
-  if (!filtered.length) {
-    $("paymentList").innerHTML =
-      "<p class='subtitle'>Não existem pedidos nesta categoria.</p>";
-    return;
-  }
-
-  $("paymentList").innerHTML = filtered.map(payment => {
-    const client = payment.client || {};
-    const id = escapeHTML(payment.id);
-    const name = escapeHTML(client.full_name || "Cliente");
-    const phone = escapeHTML(
-      client.phone_e164 || client.username || "Sem telefone"
-    );
-    const status = payment.status || "pending";
-
-    return `
-      <div class="item">
-        <strong>${name}</strong>
-        <p>Telefone: ${phone}</p>
-        <p>Plano: ${escapeHTML(payment.plan_days)} dias</p>
-        <p>Valor: ${escapeHTML(payment.amount_kz)} Kz</p>
-        <p>Estado: ${badge(status)}</p>
-        <p>Enviado em: ${escapeHTML(formatDate(payment.created_at))}</p>
-
-        ${payment.admin_note
-          ? `<p>Observação: ${escapeHTML(payment.admin_note)}</p>`
-          : ""}
-
-        <button type="button" class="full secondary"
-          data-payment-action="proof" data-id="${id}">
-          CONSULTAR COMPROVATIVO
-        </button>
-
-        <div class="proof-link" id="proof-${id}"></div>
-
-        ${status === "pending" ? `
-          <textarea class="admin-note"
-            placeholder="Observação opcional"></textarea>
-
-          <div class="actions">
-            <button type="button"
-              data-payment-action="approve" data-id="${id}">
-              APROVAR
-            </button>
-
-            <button type="button" class="danger"
-              data-payment-action="reject" data-id="${id}">
-              REJEITAR
-            </button>
-          </div>
-        ` : ""}
-      </div>`;
-  }).join("");
+function safe(value){
+ return String(value ?? "")
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
 }
 
-$("paymentFilter").addEventListener("change", renderPayments);
-$("refreshPayments").addEventListener("click", loadPayments);
+async function logout(){
+ accessToken = "";
+ currentUser = null;
 
-// ACÇÕES DOS PAGAMENTOS
-$("paymentList").addEventListener("click", async event => {
-  const button = event.target.closest(
-    "button[data-payment-action]"
-  );
+ $("dashboard").classList.add("hidden");
+ $("loginBox").classList.remove("hidden");
+ $("loginForm").reset();
 
-  if (!button) return;
+ showMessage("loginMessage","Sessão terminada.");
+}
 
-  const action = button.dataset.paymentAction;
-  const id = button.dataset.id;
-
-  try {
-    button.disabled = true;
-
-    if (action === "proof") {
-      const data = await management("proof_url", {
-        payment_id:id
-      });
-
-      if (!data.url || !data.url.startsWith(SUPABASE_URL)) {
-        throw new Error(
-          "Não foi possível validar o endereço do comprovativo."
-        );
-      }
-
-      $("proof-" + id).innerHTML =
-        `<p><a href="${escapeHTML(data.url)}"
-        target="_blank" rel="noopener noreferrer">
-        ABRIR COMPROVATIVO (link válido por 5 minutos)
-        </a></p>`;
-
-      message(
-        "Link do comprovativo gerado. Abre o link para consultar.",
-        true
-      );
-    }
-
-    if (action === "approve" || action === "reject") {
-      const payment = payments.find(
-        p => String(p.id) === String(id)
-      );
-
-      if (!payment || payment.status !== "pending") {
-        throw new Error("Este pagamento já foi analisado.");
-      }
-
-      const note = button.closest(".item")
-        .querySelector(".admin-note")?.value.trim() || "";
-
-      const isApproval = action === "approve";
-
-      const confirmation = isApproval
-        ? "Confirmas que recebeste o valor de " +
-          payment.amount_kz +
-          " Kz e queres aprovar este pagamento?"
-        : "Tens a certeza de que queres rejeitar este pagamento?";
-
-      if (!confirm(confirmation)) return;
-
-      await management(
-        isApproval ? "approve_payment" : "reject_payment",
-        {
-          payment_id:id,
-          admin_note:note
-        }
-      );
-
-      message(
-        isApproval
-          ? "Pagamento aprovado com sucesso."
-          : "Pagamento rejeitado com sucesso.",
-        true
-      );
-
-      await loadPayments();
-      await loadClients();
-    }
-  } catch(error) {
-    message("ERRO: " + error.message);
-  } finally {
-    button.disabled = false;
-  }
-});
-
-// TERMINAR SESSÃO
-$("logoutBtn").addEventListener("click", async () => {
-  try {
-    if (accessToken) {
-      await fetch(SUPABASE_URL + "/auth/v1/logout", {
-        method:"POST",
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer " + accessToken
-        }
-      });
-    }
-  } catch(error) {
-    console.error("Erro ao terminar sessão:", error);
-  }
-
-  accessToken = null;
-  clients = [];
-  payments = [];
-
-  $("dashboard").classList.add("hidden");
-  $("loginArea").classList.remove("hidden");
-  $("loginForm").reset();
-
-  message("Sessão terminada. Podes entrar novamente.", true);
-});
 </script>
 </body>
 </html>
