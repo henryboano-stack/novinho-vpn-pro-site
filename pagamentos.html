@@ -178,6 +178,59 @@
       margin-top: 12px;
     }
 
+    .estado {
+      padding: 13px;
+      border-radius: 9px;
+      margin-bottom: 12px;
+      background: #071b32;
+      border-left: 4px solid #f5d58a;
+    }
+
+    .estado strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .estado p {
+      color: #c3d3e3;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .estado.pendente {
+      border-color: #f5d58a;
+    }
+
+    .estado.aprovado {
+      border-color: #36d399;
+    }
+
+    .estado.rejeitado {
+      border-color: #ff7777;
+    }
+
+    .pedido {
+      padding: 13px 0;
+      border-bottom: 1px solid #294967;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .pedido:last-child {
+      border-bottom: none;
+    }
+
+    .pedido strong {
+      color: #36d399;
+    }
+
+    .sem-pedidos {
+      color: #b8cadb;
+      font-size: 13px;
+    }
+
     .rodape {
       text-align: center;
       color: #9eb3c8;
@@ -189,407 +242,601 @@
 
 <body>
 
-  <main class="container">
+<main class="container">
 
-    <header class="topo">
-      <div class="logo">NOVINHO VPN PRO</div>
-      <p>Pagamento e envio de comprovativo</p>
-    </header>
+  <header class="topo">
+    <div class="logo">NOVINHO VPN PRO</div>
+    <p>Pagamento e envio de comprovativo</p>
+  </header>
 
-    <section class="cartao">
-      <h2>O teu plano seleccionado</h2>
+  <section class="cartao">
+    <h2>O teu plano seleccionado</h2>
 
-      <div class="plano-resumo">
-        <span id="planoNome">A carregar...</span>
-        <strong id="planoValor">---</strong>
+    <div class="plano-resumo">
+      <span id="planoNome">A carregar...</span>
+      <strong id="planoValor">---</strong>
+    </div>
+  </section>
+
+  <section class="cartao">
+    <h2>Dados para pagamento</h2>
+
+    <div class="metodo">
+      <div class="metodo-nome">Multicaixa Express</div>
+      <div class="dados">
+        <span class="numero">973717551</span>
+        <button class="copiar" data-copy="973717551">COPIAR</button>
       </div>
-    </section>
+    </div>
 
-    <section class="cartao">
-      <h2>Dados para pagamento</h2>
-
-      <div class="metodo">
-        <div class="metodo-nome">Multicaixa Express</div>
-        <div class="dados">
-          <span class="numero">973717551</span>
-          <button class="copiar" data-copy="973717551">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">IBAN</div>
+      <div class="dados">
+        <span class="numero">0040.0000.3895.1056.1011.6</span>
+        <button class="copiar" data-copy="0040.0000.3895.1056.1011.6">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">IBAN</div>
-        <div class="dados">
-          <span class="numero">0040.0000.3895.1056.1011.6</span>
-          <button class="copiar" data-copy="0040.0000.3895.1056.1011.6">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">Número da conta</div>
+      <div class="dados">
+        <span class="numero">238.951.056.100.01</span>
+        <button class="copiar" data-copy="238.951.056.100.01">COPIAR</button>
       </div>
+      <p class="titular">Titular: HERMENEGILDO Boano Henriques</p>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">Número da conta</div>
-        <div class="dados">
-          <span class="numero">238.951.056.100.01</span>
-          <button class="copiar" data-copy="238.951.056.100.01">COPIAR</button>
-        </div>
-        <p class="titular">Titular: HERMENEGILDO Boano Henriques</p>
+    <div class="metodo">
+      <div class="metodo-nome">Unitel Money</div>
+      <div class="dados">
+        <span class="numero">973717551</span>
+        <button class="copiar" data-copy="973717551">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">Unitel Money</div>
-        <div class="dados">
-          <span class="numero">973717551</span>
-          <button class="copiar" data-copy="973717551">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">PayPay</div>
+      <div class="dados">
+        <span class="numero">973717551</span>
+        <button class="copiar" data-copy="973717551">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">PayPay</div>
-        <div class="dados">
-          <span class="numero">973717551</span>
-          <button class="copiar" data-copy="973717551">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">AirTM</div>
+      <div class="dados">
+        <span class="numero">henryboano@gmail.com</span>
+        <button class="copiar" data-copy="henryboano@gmail.com">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">AirTM</div>
-        <div class="dados">
-          <span class="numero">henryboano@gmail.com</span>
-          <button class="copiar" data-copy="henryboano@gmail.com">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">RedotPay ID</div>
+      <div class="dados">
+        <span class="numero">1283295047</span>
+        <button class="copiar" data-copy="1283295047">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">RedotPay ID</div>
-        <div class="dados">
-          <span class="numero">1283295047</span>
-          <button class="copiar" data-copy="1283295047">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">Binance ID</div>
+      <div class="dados">
+        <span class="numero">1087445941</span>
+        <button class="copiar" data-copy="1087445941">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">Binance ID</div>
-        <div class="dados">
-          <span class="numero">1087445941</span>
-          <button class="copiar" data-copy="1087445941">COPIAR</button>
-        </div>
+    <div class="metodo">
+      <div class="metodo-nome">Bybit ID</div>
+      <div class="dados">
+        <span class="numero">492532173</span>
+        <button class="copiar" data-copy="492532173">COPIAR</button>
       </div>
+    </div>
 
-      <div class="metodo">
-        <div class="metodo-nome">Bybit ID</div>
-        <div class="dados">
-          <span class="numero">492532173</span>
-          <button class="copiar" data-copy="492532173">COPIAR</button>
-        </div>
-      </div>
+    <p class="aviso">
+      Confirma sempre os dados e o nome do destinatário antes de efectuar
+      qualquer transferência.
+    </p>
+  </section>
 
-      <p class="aviso">
-        Confirma sempre os dados e o nome do destinatário antes de efectuar
-        qualquer transferência.
-      </p>
-    </section>
+  <section class="cartao">
+    <h2>Estado do pagamento</h2>
+    <div id="estadoPagamento">
+      <p class="sem-pedidos">A consultar os teus pagamentos...</p>
+    </div>
+  </section>
 
-    <section class="cartao">
-      <h2>Enviar comprovativo</h2>
+  <section class="cartao">
+    <h2>Enviar comprovativo</h2>
 
-      <p class="instrucoes">
-        Depois de efectuar o pagamento, selecciona a imagem ou o PDF
-        do comprovativo e envia para análise do administrador.
-      </p>
+    <p class="instrucoes" id="instrucaoEnvio">
+      Depois de efectuar o pagamento, selecciona a imagem ou o PDF
+      do comprovativo e envia para análise do administrador.
+    </p>
 
-      <input
-        type="file"
-        id="comprovativo"
-        accept="image/jpeg,image/png,image/webp,application/pdf"
-      >
+    <input
+      type="file"
+      id="comprovativo"
+      accept="image/jpeg,image/png,image/webp,application/pdf"
+    >
 
-      <p id="nomeFicheiro">Nenhum ficheiro seleccionado.</p>
+    <p id="nomeFicheiro">Nenhum ficheiro seleccionado.</p>
 
-      <button class="botao-principal" id="enviar">
-        ENVIAR COMPROVATIVO
-      </button>
+    <button class="botao-principal" id="enviar">
+      ENVIAR COMPROVATIVO
+    </button>
 
-      <button
-        class="botao-principal botao-voltar"
-        id="voltar"
-      >
-        VOLTAR AOS PLANOS
-      </button>
+    <button class="botao-principal botao-voltar" id="voltar">
+      VOLTAR AOS PLANOS
+    </button>
 
-      <p id="mensagem" role="status" aria-live="polite"></p>
-    </section>
+    <p id="mensagem" role="status" aria-live="polite"></p>
+  </section>
 
-    <footer class="rodape">
-      NOVINHO VPN PRO © 2026
-    </footer>
+  <section class="cartao">
+    <h2>Histórico dos pagamentos</h2>
+    <div id="historico">
+      <p class="sem-pedidos">A carregar histórico...</p>
+    </div>
+  </section>
 
-  </main>
+  <footer class="rodape">
+    NOVINHO VPN PRO © 2026
+  </footer>
 
-  <script>
-    const SUPABASE_URL =
-      "https://yaawdvqonfxnyiedcddq.supabase.co";
+</main>
 
-    const SUPABASE_KEY =
-      "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+<script>
+  const SUPABASE_URL =
+    "https://yaawdvqonfxnyiedcddq.supabase.co";
 
-    const supabaseCliente = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false
-        }
+  const SUPABASE_KEY =
+    "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
+
+  const supabaseCliente = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
       }
-    );
+    }
+  );
 
-    const planos = {
-      5: 3500,
-      15: 7000,
-      30: 10000,
-      60: 19500,
-      120: 35000
+  const planos = {
+    5: 3500,
+    15: 7000,
+    30: 10000,
+    60: 19500,
+    120: 35000
+  };
+
+  const mensagem = document.getElementById("mensagem");
+  const botaoEnviar = document.getElementById("enviar");
+  const campoFicheiro = document.getElementById("comprovativo");
+
+  let utilizador = null;
+  let planoDias = 0;
+  let planoValor = 0;
+  let existePedidoPendente = false;
+  let paginaValidada = false;
+
+  function mostrarMensagem(texto, cor) {
+    mensagem.textContent = texto;
+    mensagem.style.color = cor;
+  }
+
+  function formatarData(data) {
+    if (!data) return "Não disponível";
+
+    return new Date(data).toLocaleString("pt-PT");
+  }
+
+  function formatarEstado(estado) {
+    const estados = {
+      pending: "AGUARDANDO APROVAÇÃO",
+      approved: "PAGAMENTO APROVADO",
+      rejected: "PAGAMENTO REJEITADO"
     };
 
-    const mensagem = document.getElementById("mensagem");
-    const botaoEnviar = document.getElementById("enviar");
-    const campoFicheiro = document.getElementById("comprovativo");
+    return estados[estado] || estado.toUpperCase();
+  }
 
-    let utilizador = null;
-    let planoDias = 0;
-    let planoValor = 0;
+  function actualizarFormulario() {
+    if (existePedidoPendente) {
+      campoFicheiro.disabled = true;
+      botaoEnviar.disabled = true;
 
-    function mostrarMensagem(texto, cor) {
-      mensagem.textContent = texto;
-      mensagem.style.color = cor;
+      document.getElementById("instrucaoEnvio").textContent =
+        "Já existe um pagamento pendente de análise. Aguarda a decisão do administrador antes de enviares outro comprovativo.";
+
+      botaoEnviar.textContent = "AGUARDAR APROVAÇÃO";
+      return;
     }
 
-    async function iniciarPagina() {
+    campoFicheiro.disabled = false;
+    botaoEnviar.disabled = !paginaValidada;
+    botaoEnviar.textContent = "ENVIAR COMPROVATIVO";
+
+    document.getElementById("instrucaoEnvio").textContent =
+      "Depois de efectuar o pagamento, selecciona a imagem ou o PDF do comprovativo e envia para análise do administrador. Se um pedido anterior foi rejeitado, podes enviar um novo comprovativo.";
+  }
+  async function carregarHistorico() {
+    const { data, error } = await supabaseCliente
+      .from("payment_requests")
+      .select(
+        "id, plan_days, amount_kz, status, admin_note, created_at, reviewed_at, activated_at"
+      )
+      .eq("user_id", utilizador.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw new Error(
+        "Não foi possível consultar os pagamentos: " + error.message
+      );
+    }
+
+    const pedidos = data || [];
+
+    existePedidoPendente = pedidos.some(function(pedido) {
+      return pedido.status === "pending";
+    });
+
+    const estadoPagamento = document.getElementById("estadoPagamento");
+    const historico = document.getElementById("historico");
+
+    estadoPagamento.innerHTML = "";
+    historico.innerHTML = "";
+
+    if (pedidos.length === 0) {
+      estadoPagamento.innerHTML =
+        '<div class="estado"><strong>AINDA NÃO EXISTE PAGAMENTO</strong><p>Selecciona um plano e envia o comprovativo depois de efectuar o pagamento.</p></div>';
+
+      historico.innerHTML =
+        '<p class="sem-pedidos">Ainda não tens pagamentos registados.</p>';
+
+      actualizarFormulario();
+      return;
+    }
+
+    const ultimo = pedidos[0];
+
+    let classe = "pendente";
+    let descricao =
+      "O administrador ainda está a analisar o teu comprovativo.";
+
+    if (ultimo.status === "approved") {
+      classe = "aprovado";
+      descricao =
+        "O teu pagamento foi aprovado. A activação da assinatura é processada pelo sistema.";
+    }
+
+    if (ultimo.status === "rejected") {
+      classe = "rejeitado";
+      descricao =
+        "O teu pagamento foi rejeitado. Consulta o motivo abaixo e, se necessário, envia um novo comprovativo.";
+    }
+
+    const caixa = document.createElement("div");
+    caixa.className = "estado " + classe;
+
+    const titulo = document.createElement("strong");
+    titulo.textContent = formatarEstado(ultimo.status);
+
+    const detalhe = document.createElement("p");
+    detalhe.textContent =
+      descricao +
+      " Plano: " + ultimo.plan_days + " dias. " +
+      "Valor: " +
+      Number(ultimo.amount_kz).toLocaleString("pt-PT") + " Kz.";
+
+    caixa.appendChild(titulo);
+    caixa.appendChild(detalhe);
+
+    if (ultimo.status === "rejected" && ultimo.admin_note) {
+      const motivo = document.createElement("p");
+      motivo.style.marginTop = "8px";
+      motivo.style.color = "#ffaaaa";
+      motivo.textContent = "Motivo da rejeição: " + ultimo.admin_note;
+      caixa.appendChild(motivo);
+    }
+
+    if (ultimo.reviewed_at) {
+      const dataAnalise = document.createElement("p");
+      dataAnalise.style.marginTop = "7px";
+      dataAnalise.textContent =
+        "Data da análise: " + formatarData(ultimo.reviewed_at);
+      caixa.appendChild(dataAnalise);
+    }
+
+    estadoPagamento.appendChild(caixa);
+
+    pedidos.forEach(function(pedido) {
+      const item = document.createElement("div");
+      item.className = "pedido";
+
+      const tituloPedido = document.createElement("strong");
+      tituloPedido.textContent = formatarEstado(pedido.status);
+
+      const informacao = document.createElement("p");
+      informacao.textContent =
+        "Plano: " + pedido.plan_days + " dias | " +
+        "Valor: " +
+        Number(pedido.amount_kz).toLocaleString("pt-PT") + " Kz";
+
+      const data = document.createElement("p");
+      data.textContent =
+        "Enviado em: " + formatarData(pedido.created_at);
+
+      item.appendChild(tituloPedido);
+      item.appendChild(informacao);
+      item.appendChild(data);
+
+      if (pedido.status === "rejected" && pedido.admin_note) {
+        const motivoHistorico = document.createElement("p");
+        motivoHistorico.style.color = "#ffaaaa";
+        motivoHistorico.textContent =
+          "Motivo: " + pedido.admin_note;
+        item.appendChild(motivoHistorico);
+      }
+
+      historico.appendChild(item);
+    });
+
+    actualizarFormulario();
+  }
+
+  async function iniciarPagina() {
+    try {
+      const accessToken = sessionStorage.getItem(
+        "novinho_access_token"
+      );
+
+      const refreshToken = sessionStorage.getItem(
+        "novinho_refresh_token"
+      );
+
+      if (!accessToken || !refreshToken) {
+        window.location.replace("cliente.html");
+        return;
+      }
+
+      const { data, error } =
+        await supabaseCliente.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+
+      if (error || !data.session) {
+        throw new Error("A tua sessão expirou. Entra novamente.");
+      }
+
+      utilizador = data.session.user;
+
+      sessionStorage.setItem(
+        "novinho_access_token",
+        data.session.access_token
+      );
+
+      sessionStorage.setItem(
+        "novinho_refresh_token",
+        data.session.refresh_token
+      );
+
+      const { data: perfil, error: erroPerfil } =
+        await supabaseCliente
+          .from("user_profiles")
+          .select("role")
+          .eq("id", utilizador.id)
+          .single();
+
+      if (erroPerfil || !perfil || perfil.role !== "client") {
+        throw new Error("Não foi possível validar a tua conta.");
+      }
+
+      planoDias = Number(
+        sessionStorage.getItem("novinho_plan_days")
+      );
+
+      planoValor = Number(
+        sessionStorage.getItem("novinho_plan_amount")
+      );
+
+      if (
+        !planos[planoDias] ||
+        planos[planoDias] !== planoValor
+      ) {
+        throw new Error(
+          "Plano não seleccionado correctamente. Volta à página dos planos."
+        );
+      }
+
+      document.getElementById("planoNome").textContent =
+        planoDias + " dias de assinatura";
+
+      document.getElementById("planoValor").textContent =
+        planoValor.toLocaleString("pt-PT") + " Kz";
+
+      paginaValidada = true;
+
+      await carregarHistorico();
+
+    } catch (erro) {
+      console.error(erro);
+
+      mostrarMensagem(erro.message, "#ff7777");
+      botaoEnviar.disabled = true;
+      campoFicheiro.disabled = true;
+
+      document.getElementById("estadoPagamento").textContent =
+        "Não foi possível validar a tua conta ou consultar os pagamentos.";
+    }
+  }
+
+  document.querySelectorAll("[data-copy]").forEach(function(botao) {
+    botao.addEventListener("click", async function() {
+      const texto = botao.dataset.copy;
+
       try {
-        const accessToken = sessionStorage.getItem(
-          "novinho_access_token"
+        await navigator.clipboard.writeText(texto);
+        botao.textContent = "COPIADO!";
+
+        setTimeout(function() {
+          botao.textContent = "COPIAR";
+        }, 1500);
+
+      } catch (erro) {
+        mostrarMensagem(
+          "Não foi possível copiar. Selecciona o número manualmente.",
+          "#f5d58a"
         );
+      }
+    });
+  });
 
-        const refreshToken = sessionStorage.getItem(
-          "novinho_refresh_token"
-        );
+  campoFicheiro.addEventListener("change", function() {
+    const ficheiro = campoFicheiro.files[0];
 
-        if (!accessToken || !refreshToken) {
-          window.location.replace("cliente.html");
-          return;
-        }
+    document.getElementById("nomeFicheiro").textContent =
+      ficheiro ? ficheiro.name : "Nenhum ficheiro seleccionado.";
+  });
 
-        const { data, error } =
-          await supabaseCliente.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken
+  document.getElementById("voltar").addEventListener("click", function() {
+    window.location.href = "planos.html";
+  });
+
+  botaoEnviar.addEventListener("click", async function() {
+    const ficheiro = campoFicheiro.files[0];
+
+    if (!paginaValidada || !utilizador || !planos[planoDias]) {
+      mostrarMensagem(
+        "A conta ou o plano ainda não foram validados.",
+        "#ff7777"
+      );
+      return;
+    }
+
+    if (existePedidoPendente) {
+      mostrarMensagem(
+        "Já existe um pagamento pendente. Aguarda a análise do administrador.",
+        "#f5d58a"
+      );
+      return;
+    }
+
+    if (!ficheiro) {
+      mostrarMensagem(
+        "Selecciona primeiro o comprovativo de pagamento.",
+        "#ff7777"
+      );
+      return;
+    }
+
+    const tiposPermitidos = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "application/pdf"
+    ];
+
+    if (!tiposPermitidos.includes(ficheiro.type)) {
+      mostrarMensagem(
+        "Formato não permitido. Envia JPG, PNG, WEBP ou PDF.",
+        "#ff7777"
+      );
+      return;
+    }
+
+    if (ficheiro.size > 5 * 1024 * 1024) {
+      mostrarMensagem(
+        "O ficheiro não pode ultrapassar 5 MB.",
+        "#ff7777"
+      );
+      return;
+    }
+
+    botaoEnviar.disabled = true;
+    campoFicheiro.disabled = true;
+    botaoEnviar.textContent = "A ENVIAR...";
+
+    mostrarMensagem(
+      "A enviar o comprovativo. Aguarda...",
+      "#ffffff"
+    );
+
+    try {
+      const extensao = ficheiro.name.split(".").pop().toLowerCase();
+
+      const nomeSeguro =
+        Date.now() + "_" +
+        Math.random().toString(36).slice(2) +
+        "." + extensao;
+
+      const caminho = utilizador.id + "/" + nomeSeguro;
+
+      const { error: erroUpload } =
+        await supabaseCliente.storage
+          .from("comprovativos")
+          .upload(caminho, ficheiro, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: ficheiro.type
           });
 
-        if (error || !data.session) {
-          throw new Error("A tua sessão expirou. Entra novamente.");
-        }
-
-        utilizador = data.session.user;
-
-        sessionStorage.setItem(
-          "novinho_access_token",
-          data.session.access_token
-        );
-
-        sessionStorage.setItem(
-          "novinho_refresh_token",
-          data.session.refresh_token
-        );
-
-        const { data: perfil, error: erroPerfil } =
-          await supabaseCliente
-            .from("user_profiles")
-            .select("role")
-            .eq("id", utilizador.id)
-            .single();
-
-        if (erroPerfil || !perfil || perfil.role !== "client") {
-          throw new Error("Não foi possível validar a tua conta.");
-        }
-
-        planoDias = Number(
-          sessionStorage.getItem("novinho_plan_days")
-        );
-
-        planoValor = Number(
-          sessionStorage.getItem("novinho_plan_amount")
-        );
-
-        if (
-          !planos[planoDias] ||
-          planos[planoDias] !== planoValor
-        ) {
-          throw new Error(
-            "Plano não seleccionado correctamente. Volta à página dos planos."
-          );
-        }
-
-        document.getElementById("planoNome").textContent =
-          planoDias + " dias de assinatura";
-
-        document.getElementById("planoValor").textContent =
-          planoValor.toLocaleString("pt-PT") + " Kz";
-
-      } catch (erro) {
-        mostrarMensagem(erro.message, "#ff7777");
-        botaoEnviar.disabled = true;
+      if (erroUpload) {
+        throw erroUpload;
       }
-    }
 
-    document.querySelectorAll("[data-copy]").forEach(function (botao) {
-      botao.addEventListener("click", async function () {
-        const texto = botao.dataset.copy;
+      const { error: erroPedido } =
+        await supabaseCliente
+          .from("payment_requests")
+          .insert({
+            user_id: utilizador.id,
+            plan_days: planoDias,
+            amount_kz: planoValor,
+            proof_path: caminho,
+            status: "pending"
+          });
 
-        try {
-          await navigator.clipboard.writeText(texto);
-          botao.textContent = "COPIADO!";
-          setTimeout(() => {
-            botao.textContent = "COPIAR";
-          }, 1500);
-        } catch (erro) {
-          mostrarMensagem(
-            "Não foi possível copiar. Selecciona o número manualmente.",
-            "#f5d58a"
-          );
-        }
-      });
-    });
+      if (erroPedido) {
+        throw erroPedido;
+      }
 
-    campoFicheiro.addEventListener("change", function () {
-      const ficheiro = campoFicheiro.files[0];
+      mostrarMensagem(
+        "Comprovativo enviado com sucesso! O pagamento aguarda aprovação do administrador.",
+        "#36d399"
+      );
+
+      campoFicheiro.value = "";
 
       document.getElementById("nomeFicheiro").textContent =
-        ficheiro ? ficheiro.name : "Nenhum ficheiro seleccionado.";
-    });
+        "Nenhum ficheiro seleccionado.";
 
-    document.getElementById("voltar").addEventListener("click", function () {
-      window.location.href = "planos.html";
-    });
+      await carregarHistorico();
 
-    botaoEnviar.addEventListener("click", async function () {
-      const ficheiro = campoFicheiro.files[0];
+      botaoEnviar.textContent = "AGUARDAR APROVAÇÃO";
 
-      if (!utilizador || !planos[planoDias]) {
-        mostrarMensagem(
-          "A conta ou o plano ainda não foram validados.",
-          "#ff7777"
-        );
-        return;
-      }
+    } catch (erro) {
+      console.error("Erro no envio:", erro);
 
-      if (!ficheiro) {
-        mostrarMensagem(
-          "Selecciona primeiro o comprovativo de pagamento.",
-          "#ff7777"
-        );
-        return;
-      }
+      mostrarMensagem(
+        "Não foi possível concluir o envio: " +
+        (erro.message || "Erro desconhecido.") +
+        ". Se o ficheiro já tiver sido carregado, contacta o suporte antes de tentares novamente.",
+        "#ff7777"
+      );
 
-      const tiposPermitidos = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "application/pdf"
-      ];
+      campoFicheiro.disabled = false;
+      botaoEnviar.disabled = false;
+      botaoEnviar.textContent = "ENVIAR COMPROVATIVO";
+    }
+  });
 
-      if (!tiposPermitidos.includes(ficheiro.type)) {
-        mostrarMensagem(
-          "Formato não permitido. Envia JPG, PNG, WEBP ou PDF.",
-          "#ff7777"
-        );
-        return;
-      }
+  iniciarPagina();
 
-      if (ficheiro.size > 5 * 1024 * 1024) {
-        mostrarMensagem(
-          "O ficheiro não pode ultrapassar 5 MB.",
-          "#ff7777"
-        );
-        return;
-      }
-
-      botaoEnviar.disabled = true;
-      botaoEnviar.textContent = "A ENVIAR...";
-      mostrarMensagem("A enviar o comprovativo. Aguarda...", "#ffffff");
-
-      let envioConcluido = false;
-
-      try {
-        const extensao = ficheiro.name.split(".").pop().toLowerCase();
-
-        const nomeSeguro =
-          Date.now() + "_" +
-          Math.random().toString(36).slice(2) +
-          "." + extensao;
-
-        const caminho = utilizador.id + "/" + nomeSeguro;
-
-        const { error: erroUpload } =
-          await supabaseCliente.storage
-            .from("comprovativos")
-            .upload(caminho, ficheiro, {
-              cacheControl: "3600",
-              upsert: false,
-              contentType: ficheiro.type
-            });
-
-        if (erroUpload) {
-          throw erroUpload;
-        }
-
-        const { error: erroPedido } =
-          await supabaseCliente
-            .from("payment_requests")
-            .insert({
-              user_id: utilizador.id,
-              plan_days: planoDias,
-              amount_kz: planoValor,
-              proof_path: caminho,
-              status: "pending"
-            });
-
-        if (erroPedido) {
-          throw erroPedido;
-        }
-
-        envioConcluido = true;
-
-        mostrarMensagem(
-          "Comprovativo enviado com sucesso! O pagamento aguarda aprovação do administrador.",
-          "#36d399"
-        );
-
-        botaoEnviar.textContent = "COMPROVATIVO ENVIADO";
-
-        campoFicheiro.disabled = true;
-
-        setTimeout(function () {
-          window.location.href = "painel.html";
-        }, 3000);
-
-      } catch (erro) {
-        console.error("Erro no envio:", erro);
-
-        mostrarMensagem(
-          "Não foi possível concluir o envio: " +
-          (erro.message || "Erro desconhecido.") +
-          ". Se o ficheiro já tiver sido carregado, contacta o suporte antes de tentares novamente.",
-          "#ff7777"
-        );
-      }
-
-      if (!envioConcluido) {
-        botaoEnviar.disabled = false;
-        botaoEnviar.textContent = "ENVIAR COMPROVATIVO";
-      }
-    });
-
-    iniciarPagina();
-  </script>
-
+</script>
 </body>
 </html>
