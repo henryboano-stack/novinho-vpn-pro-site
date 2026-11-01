@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -247,15 +246,11 @@
 
   <script>
 
-    // CONFIGURAÇÃO DO SUPABASE
-
     const SUPABASE_URL =
       "https://yaawdvqonfxnyiedcddq.supabase.co";
 
     const SUPABASE_PUBLISHABLE_KEY =
       "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
-
-    // ELEMENTOS DA PÁGINA
 
     const form = document.getElementById("loginForm");
     const usernameInput = document.getElementById("username");
@@ -264,14 +259,10 @@
     const message = document.getElementById("message");
     const togglePassword = document.getElementById("togglePassword");
 
-    // MOSTRAR MENSAGENS
-
     function showMessage(text, type) {
       message.textContent = text;
       message.className = "message " + type;
     }
-
-    // MOSTRAR OU OCULTAR PALAVRA-PASSE
 
     togglePassword.addEventListener("click", function () {
 
@@ -282,8 +273,6 @@
       togglePassword.textContent = showing ? "Ocultar" : "Mostrar";
 
     });
-
-    // PROCESSAR LOGIN
 
     form.addEventListener("submit", async function (event) {
 
@@ -355,19 +344,21 @@
           );
         }
 
+        // GUARDAR A SESSÃO COM OS NOMES ESPERADOS PELO PAINEL
+
         sessionStorage.setItem(
-          "access_token",
+          "novinho_access_token",
           data.access_token
         );
 
         sessionStorage.setItem(
-          "refresh_token",
+          "novinho_refresh_token",
           data.refresh_token
         );
 
         sessionStorage.setItem(
-          "username",
-          data.username
+          "novinho_username",
+          data.username || username
         );
 
         showMessage(
