@@ -69,7 +69,7 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <form id="loginForm">
 <input id="email" type="email" placeholder="Email administrativo" required>
 <input id="password" type="password" placeholder="Palavra-passe administrativa" required>
-<button class="full" id="loginBtn">ENTRAR</button>
+<button class="full" id="loginBtn" type="submit">ENTRAR</button>
 </form>
 </div>
 
@@ -84,8 +84,8 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 </div>
 
 <div class="tabs">
-<button class="selected" id="clientsTab">CLIENTES</button>
-<button id="paymentsTab">PAGAMENTOS</button>
+<button type="button" class="selected" id="clientsTab">CLIENTES</button>
+<button type="button" id="paymentsTab">PAGAMENTOS</button>
 </div>
 
 <!-- ÁREA DE CLIENTES -->
@@ -107,14 +107,14 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <option value="120">120 dias</option>
 </select>
 
-<button class="full" id="createBtn">CRIAR CLIENTE</button>
+<button type="button" class="full" id="createBtn">CRIAR CLIENTE</button>
 </div>
 
 <div class="card">
 <h2>Gestão de clientes</h2>
 <input id="search" placeholder="Pesquisar por nome ou telefone">
 
-<button class="full secondary" id="refreshClients">ACTUALIZAR CLIENTES</button>
+<button type="button" class="full secondary" id="refreshClients">ACTUALIZAR CLIENTES</button>
 
 <div id="clientList">
 <p class="subtitle">A carregar clientes...</p>
@@ -137,7 +137,7 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <option value="all">Todos</option>
 </select>
 
-<button class="full secondary" id="refreshPayments">ACTUALIZAR PAGAMENTOS</button>
+<button type="button" class="full secondary" id="refreshPayments">ACTUALIZAR PAGAMENTOS</button>
 
 <div id="paymentList">
 <p class="subtitle">A carregar pagamentos...</p>
@@ -146,7 +146,7 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 
 </section>
 
-<button class="full logout" id="logoutBtn">TERMINAR SESSÃO</button>
+<button type="button" class="full logout" id="logoutBtn">TERMINAR SESSÃO</button>
 </div>
 
 <div id="result">Painel preparado.</div>
@@ -154,6 +154,7 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <div class="footer">
 © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
 </div>
+
 </div>
 
 <script>
@@ -195,7 +196,10 @@ async function readResponse(response) {
 
   if (!response.ok) {
     throw new Error(
-      data.error || data.message || "Erro HTTP " + response.status
+      data.error_description ||
+      data.error ||
+      data.message ||
+      "Erro HTTP " + response.status
     );
   }
 
@@ -282,7 +286,7 @@ $("loginForm").addEventListener("submit", async event => {
 
     const profileResponse = await fetch(
       SUPABASE_URL +
-      "/rest/v1/user_profiles?select=username,role,status&id=eq." +
+      "/rest/v1/user_profiles?select=id,role,status&id=eq." +
       encodeURIComponent(data.user.id),
       {
         headers: {
@@ -293,10 +297,10 @@ $("loginForm").addEventListener("submit", async event => {
     );
 
     const profiles = await readResponse(profileResponse);
-    const profile = profiles[0];
+    const profile = Array.isArray(profiles) ? profiles[0] : null;
 
     if (!profile || profile.role !== "admin" || profile.status !== "active") {
-      throw new Error("Acesso exclusivo ao administrador.");
+      throw new Error("Acesso exclusivo ao administrador. Verifica o perfil e as permissões.");
     }
 
     accessToken = data.access_token;
@@ -376,7 +380,7 @@ $("createBtn").addEventListener("click", async () => {
       days
     });
 
-    message("Cliente criado com sucesso: " + data.phone, true);
+    message("Cliente criado com sucesso: " + (data.phone || phone), true);
 
     $("fullName").value = "";
     $("phone").value = "";
@@ -456,11 +460,11 @@ function renderClients() {
         </select>
 
         <div class="actions">
-          <button data-action="renew" data-id="${id}">RENOVAR</button>
-          <button class="secondary" data-action="toggle" data-id="${id}">
+          <button type="button" data-action="renew" data-id="${id}">RENOVAR</button>
+          <button type="button" class="secondary" data-action="toggle" data-id="${id}">
             ${status === "blocked" ? "REACTIVAR" : "BLOQUEAR"}
           </button>
-          <button class="secondary" data-action="reset" data-id="${id}">
+          <button type="button" class="secondary" data-action="reset" data-id="${id}">
             ALTERAR SENHA
           </button>
         </div>
@@ -604,7 +608,7 @@ function renderPayments() {
           ? `<p>Observação: ${escapeHTML(payment.admin_note)}</p>`
           : ""}
 
-        <button class="full secondary" data-payment-action="proof" data-id="${id}">
+        <button type="button" class="full secondary" data-payment-action="proof" data-id="${id}">
           CONSULTAR COMPROVATIVO
         </button>
 
@@ -613,10 +617,10 @@ function renderPayments() {
         ${status === "pending" ? `
           <textarea class="admin-note" placeholder="Observação opcional"></textarea>
           <div class="actions">
-            <button data-payment-action="approve" data-id="${id}">
+            <button type="button" data-payment-action="approve" data-id="${id}">
               APROVAR
             </button>
-            <button class="danger" data-payment-action="reject" data-id="${id}">
+            <button type="button" class="danger" data-payment-action="reject" data-id="${id}">
               REJEITAR
             </button>
           </div>
@@ -664,12 +668,14 @@ $("paymentList").addEventListener("click", async event => {
         throw new Error("Este pagamento já foi analisado.");
       }
 
-      const note = button.closest(".item").querySelector(".admin-note")?.value.trim() || "";
+      const note = button.closest(".item")
+        .querySelector(".admin-note")?.value.trim() || "";
 
       const isApproval = action === "approve";
 
       const confirmation = isApproval
-        ? "Confirmas que recebeste o valor de " + payment.amount_kz + " Kz e queres aprovar este pagamento?"
+        ? "Confirmas que recebeste o valor de " + payment.amount_kz + " Kz e queres 
+" aprovar este pagamento?"
         : "Tens a certeza de que queres rejeitar este pagamento?";
 
       if (!confirm(confirmation)) return;
@@ -682,4 +688,54 @@ $("paymentList").addEventListener("click", async event => {
         }
       );
 
-      m
+      message(
+        isApproval
+          ? "Pagamento aprovado com sucesso."
+          : "Pagamento rejeitado com sucesso.",
+        true
+      );
+
+      await loadPayments();
+      await loadClients();
+    }
+
+  } catch(error) {
+    message("ERRO: " + error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+// TERMINAR SESSÃO
+$("logoutBtn").addEventListener("click", async () => {
+  try {
+    if (accessToken) {
+      await fetch(
+        SUPABASE_URL + "/auth/v1/logout",
+        {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + accessToken
+          }
+        }
+      );
+    }
+  } catch(error) {
+    console.error("Erro ao terminar sessão:", error);
+  }
+
+  accessToken = null;
+  clients = [];
+  payments = [];
+
+  $("dashboard").classList.add("hidden");
+  $("loginArea").classList.remove("hidden");
+  $("loginForm").reset();
+
+  message("Sessão terminada. Podes entrar novamente.", true);
+});
+</script>
+
+</body>
+</html>
