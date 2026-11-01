@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -56,6 +55,40 @@
       color: #d5e3ef;
     }
 
+    .acesso-painel {
+      background: #123b42;
+      border: 1px solid #36d399;
+      border-radius: 13px;
+      padding: 18px;
+      margin-bottom: 25px;
+    }
+
+    .acesso-painel h3 {
+      color: #36d399;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .acesso-painel p {
+      color: #d5e3ef;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 13px;
+    }
+
+    .botao-painel {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border-radius: 9px;
+      background: #36d399;
+      color: #071b32;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+    }
+
     h2 {
       font-size: 21px;
       margin-bottom: 8px;
@@ -65,6 +98,7 @@
       color: #b8cadb;
       font-size: 14px;
       margin-bottom: 20px;
+      line-height: 1.5;
     }
 
     .planos {
@@ -167,12 +201,26 @@
     <div class="boas-vindas">
       Bem-vindo, <strong id="nomeCliente">Cliente</strong>!
       <br>
-      Selecciona o período da tua assinatura.
+      Consulta a tua assinatura ou escolhe um novo plano.
     </div>
+
+    <section class="acesso-painel">
+      <h3>Já tens uma assinatura?</h3>
+      <p>
+        Se já efectuaste o pagamento ou tens uma assinatura activa,
+        podes entrar directamente na tua área privada.
+        Não precisas de escolher outro plano.
+      </p>
+
+      <a href="painel.html" class="botao-painel">
+        ENTRAR NO MEU PAINEL
+      </a>
+    </section>
 
     <h2>Os nossos planos</h2>
     <p class="descricao">
-      Escolhe um plano e continua para a página de pagamento.
+      Escolhe um plano para iniciar uma assinatura ou renovar a tua
+      quando necessário.
     </p>
 
     <section class="planos">
