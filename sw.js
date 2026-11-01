@@ -1,5 +1,4 @@
-
-const CACHE_NAME = "novinho-vpn-pro-v2";
+const CACHE_NAME = "novinho-vpn-pro-v3";
 
 const FILES_TO_CACHE = [
   "./",
@@ -37,6 +36,20 @@ self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
   if (url.origin !== self.location.origin) return;
+
+  const isPage =
+    event.request.mode === "navigate" ||
+    url.pathname.endsWith(".html") ||
+    url.pathname.endsWith("/");
+
+  if (isPage) {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request);
+      })
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then(cached => {
