@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -9,7 +8,7 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:16px;background:#07111f;color:white;font-family:Arial,sans-serif}
+body{margin:0;padding:16px;background:#07111f;color:#fff;font-family:Arial,sans-serif}
 .container{max-width:950px;margin:22px auto}
 .header{text-align:center;margin-bottom:24px}
 .header h1{color:#19d3a2}
@@ -17,13 +16,16 @@ body{margin:0;padding:16px;background:#07111f;color:white;font-family:Arial,sans
 .card{background:#101e30;border:1px solid #26394e;padding:18px;border-radius:14px;margin-bottom:16px}
 h2{color:#19d3a2;font-size:19px}
 .subtitle{color:#9caec2;font-size:13px;line-height:1.5}
-input,select,textarea{width:100%;padding:13px;margin-top:10px;border-radius:8px;border:1px solid #344761;background:#091525;color:white;font-size:15px}
+input,select,textarea{
+width:100%;padding:13px;margin-top:10px;border-radius:8px;
+border:1px solid #344761;background:#091525;color:#fff;font-size:15px
+}
 textarea{min-height:65px;resize:vertical}
 button{padding:12px;border:0;border-radius:8px;background:#19d3a2;color:#06131d;font-weight:bold;cursor:pointer;margin-top:10px}
 button:disabled{opacity:.5;cursor:not-allowed}
 .full{width:100%}
-.logout,.danger{background:#d94b60;color:white}
-.secondary{background:#304761;color:white}
+.logout,.danger{background:#d94b60;color:#fff}
+.secondary{background:#304761;color:#fff}
 .hidden{display:none!important}
 #result{margin-top:15px;padding:12px;border-radius:8px;background:#091525;color:#c5d3e1;font-size:13px;overflow-wrap:anywhere}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}
@@ -36,19 +38,18 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}
 .actions button{margin:0;font-size:12px}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.tabs button{margin:0;background:#304761;color:white}
+.tabs button{margin:0;background:#304761;color:#fff}
 .tabs button.selected{background:#19d3a2;color:#06131d}
-.badge{display:inline-block;padding:5px 8px;border-radius:5px;font-size:11px;font-weight:bold;background:#304761;color:white}
+.badge{display:inline-block;padding:5px 8px;border-radius:5px;font-size:11px;font-weight:bold;background:#304761;color:#fff}
 .pending{background:#8a641d;color:#fff0b3}
-.approved{background:#176c50;color:#b8ffe5}
+.approved,.active{background:#176c50;color:#b8ffe5}
 .rejected,.blocked{background:#782d3d;color:#ffd5dd}
-.active{background:#176c50;color:#b8ffe5}
 .footer{text-align:center;color:#71859b;font-size:11px;margin-top:25px}
 a{color:#19d3a2;overflow-wrap:anywhere}
 hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 @media(max-width:550px){
- .stats{grid-template-columns:1fr 1fr}
- .actions{grid-template-columns:1fr 1fr}
+.stats{grid-template-columns:1fr 1fr}
+.actions{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -61,19 +62,19 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <p>PAINEL ADMINISTRATIVO</p>
 </div>
 
-<!-- LOGIN -->
 <div class="card" id="loginArea">
 <h2>Entrar como administrador</h2>
 <p class="subtitle">Acesso exclusivo à administração da plataforma.</p>
 
 <form id="loginForm">
-<input id="email" type="email" placeholder="Email administrativo" required>
-<input id="password" type="password" placeholder="Palavra-passe administrativa" required>
+<input id="email" type="email" placeholder="Email administrativo" autocomplete="username" required>
+
+<input id="password" type="password" placeholder="Palavra-passe administrativa" autocomplete="current-password" required>
+
 <button class="full" id="loginBtn" type="submit">ENTRAR</button>
 </form>
 </div>
 
-<!-- PAINEL -->
 <div id="dashboard" class="hidden">
 
 <div class="stats">
@@ -88,15 +89,16 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <button type="button" id="paymentsTab">PAGAMENTOS</button>
 </div>
 
-<!-- ÁREA DE CLIENTES -->
 <section id="clientsArea">
 
 <div class="card">
 <h2>Criar novo cliente</h2>
 <p class="subtitle">Cria uma conta com nome, telefone internacional e palavra-passe.</p>
 
-<input id="fullName" placeholder="Nome completo">
+<input id="fullName" placeholder="Nome completo" maxlength="120">
+
 <input id="phone" type="tel" placeholder="Telefone com indicativo, ex.: +244923000000">
+
 <input id="clientPassword" type="password" placeholder="Palavra-passe (mínimo 8 caracteres)">
 
 <select id="days">
@@ -113,19 +115,13 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 <div class="card">
 <h2>Gestão de clientes</h2>
 <input id="search" placeholder="Pesquisar por nome ou telefone">
-
 <button type="button" class="full secondary" id="refreshClients">ACTUALIZAR CLIENTES</button>
-
-<div id="clientList">
-<p class="subtitle">A carregar clientes...</p>
-</div>
+<div id="clientList"><p class="subtitle">A carregar clientes...</p></div>
 </div>
 
 </section>
 
-<!-- ÁREA DE PAGAMENTOS -->
 <section id="paymentsArea" class="hidden">
-
 <div class="card">
 <h2>Pedidos de pagamento</h2>
 <p class="subtitle">Consulta os comprovativos e decide se o pagamento deve ser aprovado ou rejeitado.</p>
@@ -139,17 +135,14 @@ hr{border:0;border-top:1px solid #26394e;margin:15px 0}
 
 <button type="button" class="full secondary" id="refreshPayments">ACTUALIZAR PAGAMENTOS</button>
 
-<div id="paymentList">
-<p class="subtitle">A carregar pagamentos...</p>
+<div id="paymentList"><p class="subtitle">A carregar pagamentos...</p></div>
 </div>
-</div>
-
 </section>
 
 <button type="button" class="full logout" id="logoutBtn">TERMINAR SESSÃO</button>
 </div>
 
-<div id="result">Painel preparado.</div>
+<div id="result" role="status" aria-live="polite">Painel preparado.</div>
 
 <div class="footer">
 © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
@@ -185,11 +178,11 @@ function escapeHTML(value) {
 }
 
 async function readResponse(response) {
-  const text = await response.text();
+  const raw = await response.text();
   let data = {};
 
   try {
-    data = text ? JSON.parse(text) : {};
+    data = raw ? JSON.parse(raw) : {};
   } catch {
     throw new Error("Resposta inválida do servidor.");
   }
@@ -225,32 +218,41 @@ function formatDate(value) {
 
   const date = new Date(value);
 
-  if (Number.isNaN(date.getTime())) return "Data inválida";
+  if (Number.isNaN(date.getTime())) {
+    return "Data inválida";
+  }
 
   return date.toLocaleString("pt-PT", {
-    dateStyle: "short",
-    timeStyle: "short",
-    timeZone: "Africa/Luanda"
+    dateStyle:"short",
+    timeStyle:"short",
+    timeZone:"Africa/Luanda"
   });
 }
 
 function statusLabel(status) {
   const labels = {
-    active: "ACTIVO",
-    pending: "PENDENTE",
-    blocked: "BLOQUEADO",
-    expired: "EXPIRADO",
-    approved: "APROVADO",
-    rejected: "REJEITADO"
+    active:"ACTIVO",
+    pending:"PENDENTE",
+    blocked:"BLOQUEADO",
+    expired:"EXPIRADO",
+    approved:"APROVADO",
+    rejected:"REJEITADO"
   };
 
   return labels[status] || status;
 }
 
 function badge(status) {
-  const safeStatus = ["active","pending","blocked","expired","approved","rejected"].includes(status)
-    ? status
-    : "";
+  const allowed = [
+    "active",
+    "pending",
+    "blocked",
+    "expired",
+    "approved",
+    "rejected"
+  ];
+
+  const safeStatus = allowed.includes(status) ? status : "";
 
   return `<span class="badge ${safeStatus}">${escapeHTML(statusLabel(status))}</span>`;
 }
@@ -261,20 +263,21 @@ $("loginForm").addEventListener("submit", async event => {
 
   const email = $("email").value.trim();
   const password = $("password").value;
+  const button = $("loginBtn");
 
-  $("loginBtn").disabled = true;
+  button.disabled = true;
   message("A verificar credenciais...");
 
   try {
     const response = await fetch(
       SUPABASE_URL + "/auth/v1/token?grant_type=password",
       {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Content-Type": "application/json"
+        method:"POST",
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Content-Type":"application/json"
         },
-        body: JSON.stringify({ email, password })
+        body:JSON.stringify({email, password})
       }
     );
 
@@ -285,13 +288,11 @@ $("loginForm").addEventListener("submit", async event => {
     }
 
     const profileResponse = await fetch(
-      SUPABASE_URL +
-      "/rest/v1/user_profiles?select=id,role,status&id=eq." +
-      encodeURIComponent(data.user.id),
+      SUPABASE_URL + "/rest/v1/user_profiles?select=id,role,status&id=eq." + encodeURIComponent(data.user.id),
       {
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + data.access_token
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + data.access_token
         }
       }
     );
@@ -317,8 +318,9 @@ $("loginForm").addEventListener("submit", async event => {
   } catch(error) {
     accessToken = null;
     message("ERRO NO LOGIN: " + error.message);
+
   } finally {
-    $("loginBtn").disabled = false;
+    button.disabled = false;
   }
 });
 
@@ -331,25 +333,22 @@ async function management(action, extra={}) {
   const response = await fetch(
     SUPABASE_URL + "/functions/v1/gestao-clientes",
     {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": "Bearer " + accessToken,
-        "Content-Type": "application/json"
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer " + accessToken,
+        "Content-Type":"application/json"
       },
-      body: JSON.stringify({ action, ...extra })
+      body:JSON.stringify({action, ...extra})
     }
   );
 
   return await readResponse(response);
-}
-
-// CRIAR CLIENTE
+}// CRIAR CLIENTE
 $("createBtn").addEventListener("click", async () => {
   const full_name = $("fullName").value.trim();
   const password = $("clientPassword").value;
   const days = Number($("days").value);
-
   let phone;
 
   try {
@@ -362,7 +361,6 @@ $("createBtn").addEventListener("click", async () => {
     if (password.length < 8 || password.length > 72) {
       throw new Error("A palavra-passe deve ter entre 8 e 72 caracteres.");
     }
-
   } catch(error) {
     message(error.message);
     return;
@@ -387,7 +385,6 @@ $("createBtn").addEventListener("click", async () => {
     $("clientPassword").value = "";
 
     await loadClients();
-
   } catch(error) {
     message("ERRO AO CRIAR: " + error.message);
   } finally {
@@ -398,7 +395,8 @@ $("createBtn").addEventListener("click", async () => {
 
 // LISTAR CLIENTES
 async function loadClients() {
-  $("clientList").innerHTML = "<p class='subtitle'>A carregar clientes...</p>";
+  $("clientList").innerHTML =
+    "<p class='subtitle'>A carregar clientes...</p>";
 
   try {
     const data = await management("list");
@@ -406,7 +404,6 @@ async function loadClients() {
 
     renderClients();
     updateStats();
-
   } catch(error) {
     $("clientList").textContent = "Erro: " + error.message;
     message("Erro ao carregar clientes: " + error.message);
@@ -415,9 +412,15 @@ async function loadClients() {
 
 function updateStats() {
   $("total").textContent = clients.length;
-  $("active").textContent = clients.filter(c => c.status === "active").length;
-  $("pending").textContent = clients.filter(c => c.status === "pending").length;
-  $("blocked").textContent = clients.filter(c => c.status === "blocked").length;
+
+  $("active").textContent =
+    clients.filter(c => c.status === "active").length;
+
+  $("pending").textContent =
+    clients.filter(c => c.status === "pending").length;
+
+  $("blocked").textContent =
+    clients.filter(c => c.status === "blocked").length;
 }
 
 // MOSTRAR CLIENTES
@@ -439,8 +442,9 @@ function renderClients() {
   $("clientList").innerHTML = filtered.map(client => {
     const id = escapeHTML(client.id);
     const name = escapeHTML(client.full_name || "Nome não informado");
-    const phone = escapeHTML(client.phone_e164 || client.username || "Sem telefone");
-
+    const phone = escapeHTML(
+      client.phone_e164 || client.username || "Sem telefone"
+    );
     const status = client.status || "pending";
 
     return `
@@ -460,16 +464,21 @@ function renderClients() {
         </select>
 
         <div class="actions">
-          <button type="button" data-action="renew" data-id="${id}">RENOVAR</button>
-          <button type="button" class="secondary" data-action="toggle" data-id="${id}">
+          <button type="button" data-action="renew" data-id="${id}">
+            RENOVAR
+          </button>
+
+          <button type="button" class="secondary"
+            data-action="toggle" data-id="${id}">
             ${status === "blocked" ? "REACTIVAR" : "BLOQUEAR"}
           </button>
-          <button type="button" class="secondary" data-action="reset" data-id="${id}">
+
+          <button type="button" class="secondary"
+            data-action="reset" data-id="${id}">
             ALTERAR SENHA
           </button>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join("");
 }
 
@@ -480,14 +489,15 @@ $("clientList").addEventListener("click", async event => {
 
   const id = button.dataset.id;
   const action = button.dataset.action;
-  const client = clients.find(c => c.id === id);
+
+  const client = clients.find(c => String(c.id) === String(id));
 
   if (!client) {
     message("Cliente não encontrado.");
     return;
   }
 
-  const extra = { user_id: id };
+  const extra = {user_id:id};
 
   try {
     button.disabled = true;
@@ -497,12 +507,13 @@ $("clientList").addEventListener("click", async event => {
         button.closest(".item").querySelector(".renew-days").value
       );
 
-      await management("renew", { ...extra, days });
+      await management("renew", {...extra, days});
       message("Assinatura renovada com sucesso.", true);
     }
 
     if (action === "toggle") {
-      const status = client.status === "blocked" ? "active" : "blocked";
+      const status =
+        client.status === "blocked" ? "active" : "blocked";
 
       const confirmText = status === "blocked"
         ? "Tens a certeza de que queres bloquear esta conta?"
@@ -510,27 +521,36 @@ $("clientList").addEventListener("click", async event => {
 
       if (!confirm(confirmText)) return;
 
-      await management("set_status", { ...extra, status });
+      await management("set_status", {...extra, status});
       message("Estado da conta actualizado.", true);
     }
 
     if (action === "reset") {
-      const password = prompt("Introduz a nova palavra-passe (mínimo 8 caracteres):");
+      const newPassword = prompt(
+        "Introduz a nova palavra-passe (mínimo 8 caracteres):"
+      );
 
-      if (password === null) return;
+      if (newPassword === null) return;
 
-      if (password.length < 8 || password.length > 72) {
-        throw new Error("A palavra-passe deve ter entre 8 e 72 caracteres.");
+      if (newPassword.length < 8 || newPassword.length > 72) {
+        throw new Error(
+          "A palavra-passe deve ter entre 8 e 72 caracteres."
+        );
       }
 
-      if (!confirm("Confirmas a alteração da palavra-passe deste cliente?")) return;
+      if (!confirm(
+        "Confirmas a alteração da palavra-passe deste cliente?"
+      )) return;
 
-      await management("reset_password", { ...extra, password });
+      await management("reset_password", {
+        ...extra,
+        password:newPassword
+      });
+
       message("Palavra-passe alterada com sucesso.", true);
     }
 
     await loadClients();
-
   } catch(error) {
     message("ERRO: " + error.message);
   } finally {
@@ -552,14 +572,14 @@ function showArea(area) {
   $("paymentsTab").classList.toggle("selected", !clientsSelected);
 }
 
-$("clientsTab").addEventListener("click", () => showArea("clients"));
+$("clientsTab").addEventListener("click", () => {
+  showArea("clients");
+});
 
 $("paymentsTab").addEventListener("click", async () => {
   showArea("payments");
   await loadPayments();
-});
-
-// LISTAR PAGAMENTOS
+});// LISTAR PAGAMENTOS
 async function loadPayments() {
   $("paymentList").innerHTML =
     "<p class='subtitle'>A carregar pagamentos...</p>";
@@ -568,7 +588,6 @@ async function loadPayments() {
     const data = await management("list_payments");
     payments = data.payments || [];
     renderPayments();
-
   } catch(error) {
     $("paymentList").textContent = "Erro: " + error.message;
     message("Erro ao carregar pagamentos: " + error.message);
@@ -593,7 +612,9 @@ function renderPayments() {
     const client = payment.client || {};
     const id = escapeHTML(payment.id);
     const name = escapeHTML(client.full_name || "Cliente");
-    const phone = escapeHTML(client.phone_e164 || client.username || "Sem telefone");
+    const phone = escapeHTML(
+      client.phone_e164 || client.username || "Sem telefone"
+    );
     const status = payment.status || "pending";
 
     return `
@@ -604,29 +625,35 @@ function renderPayments() {
         <p>Valor: ${escapeHTML(payment.amount_kz)} Kz</p>
         <p>Estado: ${badge(status)}</p>
         <p>Enviado em: ${escapeHTML(formatDate(payment.created_at))}</p>
+
         ${payment.admin_note
           ? `<p>Observação: ${escapeHTML(payment.admin_note)}</p>`
           : ""}
 
-        <button type="button" class="full secondary" data-payment-action="proof" data-id="${id}">
+        <button type="button" class="full secondary"
+          data-payment-action="proof" data-id="${id}">
           CONSULTAR COMPROVATIVO
         </button>
 
         <div class="proof-link" id="proof-${id}"></div>
 
         ${status === "pending" ? `
-          <textarea class="admin-note" placeholder="Observação opcional"></textarea>
+          <textarea class="admin-note"
+            placeholder="Observação opcional"></textarea>
+
           <div class="actions">
-            <button type="button" data-payment-action="approve" data-id="${id}">
+            <button type="button"
+              data-payment-action="approve" data-id="${id}">
               APROVAR
             </button>
-            <button type="button" class="danger" data-payment-action="reject" data-id="${id}">
+
+            <button type="button" class="danger"
+              data-payment-action="reject" data-id="${id}">
               REJEITAR
             </button>
           </div>
         ` : ""}
-      </div>
-    `;
+      </div>`;
   }).join("");
 }
 
@@ -635,7 +662,10 @@ $("refreshPayments").addEventListener("click", loadPayments);
 
 // ACÇÕES DOS PAGAMENTOS
 $("paymentList").addEventListener("click", async event => {
-  const button = event.target.closest("button[data-payment-action]");
+  const button = event.target.closest(
+    "button[data-payment-action]"
+  );
+
   if (!button) return;
 
   const action = button.dataset.paymentAction;
@@ -646,23 +676,31 @@ $("paymentList").addEventListener("click", async event => {
 
     if (action === "proof") {
       const data = await management("proof_url", {
-        payment_id: id
+        payment_id:id
       });
 
       if (!data.url || !data.url.startsWith(SUPABASE_URL)) {
-        throw new Error("Não foi possível validar o endereço do comprovativo.");
+        throw new Error(
+          "Não foi possível validar o endereço do comprovativo."
+        );
       }
 
-      const container = $("proof-" + id);
+      $("proof-" + id).innerHTML =
+        `<p><a href="${escapeHTML(data.url)}"
+        target="_blank" rel="noopener noreferrer">
+        ABRIR COMPROVATIVO (link válido por 5 minutos)
+        </a></p>`;
 
-      container.innerHTML =
-        `<p><a href="${escapeHTML(data.url)}" target="_blank" rel="noopener noreferrer">ABRIR COMPROVATIVO (link válido por 5 minutos)</a></p>`;
-
-      message("Link do comprovativo gerado. Abre o link para consultar.", true);
+      message(
+        "Link do comprovativo gerado. Abre o link para consultar.",
+        true
+      );
     }
 
     if (action === "approve" || action === "reject") {
-      const payment = payments.find(p => p.id === id);
+      const payment = payments.find(
+        p => String(p.id) === String(id)
+      );
 
       if (!payment || payment.status !== "pending") {
         throw new Error("Este pagamento já foi analisado.");
@@ -674,8 +712,9 @@ $("paymentList").addEventListener("click", async event => {
       const isApproval = action === "approve";
 
       const confirmation = isApproval
-        ? "Confirmas que recebeste o valor de " + payment.amount_kz + " Kz e queres 
-" aprovar este pagamento?"
+        ? "Confirmas que recebeste o valor de " +
+          payment.amount_kz +
+          " Kz e queres aprovar este pagamento?"
         : "Tens a certeza de que queres rejeitar este pagamento?";
 
       if (!confirm(confirmation)) return;
@@ -683,8 +722,8 @@ $("paymentList").addEventListener("click", async event => {
       await management(
         isApproval ? "approve_payment" : "reject_payment",
         {
-          payment_id: id,
-          admin_note: note
+          payment_id:id,
+          admin_note:note
         }
       );
 
@@ -698,7 +737,6 @@ $("paymentList").addEventListener("click", async event => {
       await loadPayments();
       await loadClients();
     }
-
   } catch(error) {
     message("ERRO: " + error.message);
   } finally {
@@ -710,16 +748,13 @@ $("paymentList").addEventListener("click", async event => {
 $("logoutBtn").addEventListener("click", async () => {
   try {
     if (accessToken) {
-      await fetch(
-        SUPABASE_URL + "/auth/v1/logout",
-        {
-          method: "POST",
-          headers: {
-            "apikey": SUPABASE_KEY,
-            "Authorization": "Bearer " + accessToken
-          }
+      await fetch(SUPABASE_URL + "/auth/v1/logout", {
+        method:"POST",
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + accessToken
         }
-      );
+      });
     }
   } catch(error) {
     console.error("Erro ao terminar sessão:", error);
@@ -736,6 +771,5 @@ $("logoutBtn").addEventListener("click", async () => {
   message("Sessão terminada. Podes entrar novamente.", true);
 });
 </script>
-
 </body>
 </html>
