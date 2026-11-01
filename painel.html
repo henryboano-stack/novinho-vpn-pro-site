@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 
-<title>Minha Área VPN | NOVINHO VPN PRO</title>
+<title>Meu Painel | NOVINHO VPN PRO</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -14,20 +15,20 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 body {
     min-height: 100vh;
     background: #07111f;
     color: #fff;
-    font-family: Arial, sans-serif;
     padding: 20px;
 }
 
 .container {
     width: 100%;
     max-width: 480px;
-    margin: 35px auto;
+    margin: 30px auto;
 }
 
 .logo {
@@ -88,9 +89,71 @@ h2 {
     overflow-wrap: anywhere;
 }
 
+.status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #103c35;
+    color: #19d3a2;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.vpn-card {
+    background: #103c35;
+    border: 1px solid #1b755f;
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.vpn-card h3 {
+    color: #19d3a2;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.vpn-card p {
+    color: #b9dcd2;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 17px;
+}
+
+.btn-vpn {
+    display: block;
+    width: 100%;
+    padding: 17px;
+    border: none;
+    border-radius: 10px;
+    background: #19d3a2;
+    color: #07111f;
+    font-size: 15px;
+    font-weight: 900;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-vpn:active {
+    opacity: .8;
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #a33d55;
+    border-radius: 10px;
+    background: transparent;
+    color: #ff9bad;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
 .loading {
     text-align: center;
-    padding: 25px 10px;
+    padding: 30px 10px;
     color: #b9c8d8;
     font-size: 14px;
 }
@@ -106,9 +169,7 @@ h2 {
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 .error {
@@ -122,103 +183,15 @@ h2 {
     line-height: 1.6;
 }
 
-.status-box {
-    background: #421d29;
-    border: 1px solid #a33d55;
-    border-radius: 14px;
-    padding: 25px 15px;
-    text-align: center;
-    margin: 20px 0;
-}
-
-.status-icon {
-    font-size: 45px;
-    margin-bottom: 12px;
-}
-
-.connection-status {
-    color: #ff718c;
-    font-size: 21px;
-    font-weight: 900;
-    margin-bottom: 10px;
-}
-
-.connection-description {
-    color: #ffc1cd;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.status-box.connected {
-    background: #103c35;
-    border-color: #1b755f;
-}
-
-.status-box.connected .connection-status {
-    color: #19d3a2;
-}
-
-.status-box.connected .connection-description {
-    color: #9bf0d7;
-}
-
-.vpn-button {
-    width: 100%;
-    padding: 20px;
-    border: none;
-    border-radius: 12px;
-    background: #e53950;
-    color: #fff;
-    font-size: 17px;
-    font-weight: 900;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.vpn-button.connected {
-    background: #19d3a2;
-    color: #07111f;
-}
-
-.vpn-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
 .message {
     display: none;
-    background: #102b46;
-    border: 1px solid #294967;
-    color: #d5e3ef;
-    padding: 14px;
-    border-radius: 10px;
     margin-top: 15px;
+    padding: 13px;
+    border-radius: 9px;
+    background: #102b46;
+    color: #d5e3ef;
     font-size: 13px;
     line-height: 1.6;
-}
-
-.info-service {
-    background: #17283b;
-    border: 1px solid #30445a;
-    border-radius: 10px;
-    padding: 14px;
-    color: #b9c8d8;
-    font-size: 12px;
-    line-height: 1.7;
-    margin-top: 18px;
-}
-
-.btn-back {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 10px;
-    background: #26394e;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 12px;
 }
 
 .footer {
@@ -229,34 +202,36 @@ h2 {
     line-height: 1.6;
 }
 
-#vpnContent {
+#dashboard {
     display: none;
 }
 </style>
-</head><body>
+</head>
+
+<body>
 
 <div class="container">
 
-    <div class="logo">
+    <header class="logo">
         <h1>NOVINHO VPN PRO</h1>
-        <p>MINHA ÁREA VPN</p>
-    </div>
+        <p>ÁREA PRIVADA DO CLIENTE</p>
+    </header>
 
-    <div class="card">
+    <main class="card">
 
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            A verificar a tua autorização...
+            A verificar a tua conta...
         </div>
 
         <div id="error" class="error"></div>
 
-        <div id="vpnContent">
+        <div id="dashboard">
 
-            <h2>Bem-vindo à tua VPN!</h2>
+            <h2>Bem-vindo!</h2>
 
             <p class="subtitle">
-                Consulta os dados da tua conta e controla o acesso ao serviço VPN.
+                Consulta os dados da tua conta e controla a tua assinatura.
             </p>
 
             <div class="info">
@@ -265,59 +240,47 @@ h2 {
             </div>
 
             <div class="info">
+                <small>Estado da conta</small>
+                <span id="accountStatus" class="status">ACTIVA</span>
+            </div>
+
+            <div class="info">
                 <small>Validade da assinatura</small>
                 <strong id="clientExpiry">---</strong>
             </div>
 
-            <div id="statusBox" class="status-box">
+            <section class="vpn-card">
+                <h3>Minha VPN</h3>
 
-                <div id="statusIcon" class="status-icon">🔒</div>
+                <p>
+                    Acede à tua área VPN para consultar o estado
+                    da ligação e utilizar o serviço quando estiver disponível.
+                </p>
 
-                <div id="connectionStatus" class="connection-status">
-                    DESCONECTADA
-                </div>
-
-                <div id="connectionDescription" class="connection-description">
-                    A tua ligação ainda não foi iniciada.
-                </div>
-
-            </div>
-
-            <button
-                type="button"
-                id="vpnButton"
-                class="vpn-button"
-                onclick="solicitarLigacao()">
-                CONECTAR VPN
-            </button>
+                <a href="vpn.html" class="btn-vpn">
+                    🔐 ACEDER À MINHA VPN
+                </a>
+            </section>
 
             <div id="message" class="message"></div>
 
-            <div class="info-service">
-                <strong>INFORMAÇÃO DO SERVIÇO</strong>
-                <p>
-                    O servidor de ligação VPN encontra-se em preparação.
-                    Assim que o serviço estiver disponível, poderás iniciar
-                    a tua ligação através desta área.
-                </p>
-            </div>
-
             <button
                 type="button"
-                class="btn-back"
-                onclick="window.location.href='painel.html'">
-                VOLTAR AO MEU PAINEL
+                class="btn-logout"
+                onclick="logout()">
+                TERMINAR SESSÃO
             </button>
 
         </div>
 
-    </div>
+    </main>
 
-    <div class="footer">
+    <footer class="footer">
         © 2026 NOVINHO VPN PRO. Todos os direitos reservados.
-    </div>
+    </footer>
 
-  </div><script>
+</div>
+<script>
 "use strict";
 
 /* CONFIGURAÇÃO SUPABASE */
@@ -325,12 +288,12 @@ h2 {
 const SUPABASE_URL =
     "https://yaawdvqonfxnyiedcddq.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
+const SUPABASE_KEY =
     "sb_publishable_tNYy4TfzPcYLo6B33MNcvA_CXOPSYWF";
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY,
+    SUPABASE_KEY,
     {
         auth: {
             persistSession: false,
@@ -340,35 +303,15 @@ const supabaseClient = window.supabase.createClient(
     }
 );
 
-/* ELEMENTOS DA PÁGINA */
+/* ELEMENTOS */
 
 const loading = document.getElementById("loading");
 const errorBox = document.getElementById("error");
-const vpnContent = document.getElementById("vpnContent");
+const dashboard = document.getElementById("dashboard");
 
 const clientName = document.getElementById("clientName");
+const accountStatus = document.getElementById("accountStatus");
 const clientExpiry = document.getElementById("clientExpiry");
-
-const statusBox = document.getElementById("statusBox");
-const statusIcon = document.getElementById("statusIcon");
-
-const connectionStatus =
-    document.getElementById("connectionStatus");
-
-const connectionDescription =
-    document.getElementById("connectionDescription");
-
-const vpnButton = document.getElementById("vpnButton");
-const message = document.getElementById("message");
-
-/* MOSTRAR ERRO */
-
-function mostrarErro(texto) {
-    loading.style.display = "none";
-    vpnContent.style.display = "none";
-    errorBox.style.display = "block";
-    errorBox.textContent = texto;
-}
 
 /* FORMATAR DATA */
 
@@ -389,31 +332,18 @@ function formatarData(data) {
     });
 }
 
-/* BOTÃO DE LIGAÇÃO */
+/* MOSTRAR ERRO */
 
-function solicitarLigacao() {
-    message.style.display = "block";
-
-    message.textContent =
-        "O serviço de ligação VPN ainda está em preparação. " +
-        "Aguarda pela activação do servidor para poderes conectar-te.";
-
-    statusBox.classList.remove("connected");
-    vpnButton.classList.remove("connected");
-
-    statusIcon.textContent = "🔒";
-
-    connectionStatus.textContent = "DESCONECTADA";
-
-    connectionDescription.textContent =
-        "A tua ligação ainda não foi iniciada.";
-
-    vpnButton.textContent = "CONECTAR VPN";
+function mostrarErro(texto) {
+    loading.style.display = "none";
+    dashboard.style.display = "none";
+    errorBox.style.display = "block";
+    errorBox.textContent = texto;
 }
 
-/* VERIFICAR AUTORIZAÇÃO */
+/* VERIFICAR ACESSO */
 
-async function verificarAcessoVPN() {
+async function verificarAcesso() {
 
     try {
 
@@ -428,16 +358,18 @@ async function verificarAcessoVPN() {
             return;
         }
 
-        const { data: sessionData, error: sessionError } =
+        /* VALIDAR SESSÃO */
+
+        const { data: sessao, error: erroSessao } =
             await supabaseClient.auth.setSession({
                 access_token: accessToken,
                 refresh_token: refreshToken
             });
 
         if (
-            sessionError ||
-            !sessionData ||
-            !sessionData.session
+            erroSessao ||
+            !sessao ||
+            !sessao.session
         ) {
 
             sessionStorage.removeItem("novinho_access_token");
@@ -447,27 +379,27 @@ async function verificarAcessoVPN() {
             return;
         }
 
-        /* ACTUALIZAR SESSÃO */
+        /* ACTUALIZAR TOKENS */
 
         sessionStorage.setItem(
             "novinho_access_token",
-            sessionData.session.access_token
+            sessao.session.access_token
         );
 
         sessionStorage.setItem(
             "novinho_refresh_token",
-            sessionData.session.refresh_token
+            sessao.session.refresh_token
         );
 
-        /* IDENTIFICAR CLIENTE */
+        /* IDENTIFICAR UTILIZADOR */
 
-        const { data: userData, error: userError } =
+        const { data: utilizador, error: erroUtilizador } =
             await supabaseClient.auth.getUser();
 
         if (
-            userError ||
-            !userData ||
-            !userData.user
+            erroUtilizador ||
+            !utilizador ||
+            !utilizador.user
         ) {
 
             window.location.replace("cliente.html");
@@ -476,17 +408,17 @@ async function verificarAcessoVPN() {
 
         /* CONSULTAR PERFIL */
 
-        const { data: perfil, error: perfilError } =
+        const { data: perfil, error: erroPerfil } =
             await supabaseClient
                 .from("user_profiles")
                 .select("username, role, status, expires_at")
-                .eq("id", userData.user.id)
+                .eq("id", utilizador.user.id)
                 .single();
 
-        if (perfilError || !perfil) {
+        if (erroPerfil || !perfil) {
 
             mostrarErro(
-                "Não foi possível confirmar os dados da tua conta."
+                "Não foi possível localizar os dados da tua conta."
             );
 
             return;
@@ -508,7 +440,7 @@ async function verificarAcessoVPN() {
         if (perfil.status === "blocked") {
 
             mostrarErro(
-                "A tua conta encontra-se bloqueada. Contacta o administrador."
+                "A tua conta está bloqueada. Contacta o administrador."
             );
 
             return;
@@ -535,7 +467,7 @@ async function verificarAcessoVPN() {
             return;
         }
 
-        /* MOSTRAR ÁREA VPN */
+        /* MOSTRAR DADOS */
 
         clientName.textContent =
             perfil.username || "Cliente";
@@ -543,27 +475,40 @@ async function verificarAcessoVPN() {
         clientExpiry.textContent =
             formatarData(perfil.expires_at);
 
+        accountStatus.textContent = "ACTIVA";
+
         loading.style.display = "none";
         errorBox.style.display = "none";
-        vpnContent.style.display = "block";
+        dashboard.style.display = "block";
 
     } catch (erro) {
 
-        console.error(
-            "Erro ao verificar acesso VPN:",
-            erro
-        );
+        console.error("Erro no painel:", erro);
 
         mostrarErro(
             "Ocorreu um erro ao verificar a tua conta. Tenta novamente."
         );
     }
 }
+</script>
+    <script>
+async function logout() {
+    try {
+        await supabaseClient.auth.signOut();
+    } catch (erro) {
+        console.error("Erro ao terminar sessão:", erro);
+    }
 
-/* INICIAR VERIFICAÇÃO */
+    sessionStorage.removeItem("novinho_access_token");
+    sessionStorage.removeItem("novinho_refresh_token");
+    sessionStorage.removeItem("novinho_username");
+    sessionStorage.removeItem("novinho_plan_days");
+    sessionStorage.removeItem("novinho_plan_amount");
 
-verificarAcessoVPN();
+    window.location.replace("cliente.html");
+}
 
+verificarAcesso();
 </script>
 
 </body>
